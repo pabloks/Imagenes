@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/TP0/src/com/itba/imagenes/tp0/Crop.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.itba.imagenes.tp0.Crop"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="inputImageName=/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/input.jpg outputImageName=/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/crop.jpg outputImageFormat=jpg width=300 height=300"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="TP0"/>
+</launchConfiguration>

@@ -1,0 +1,35 @@
+package com.itba.imagenes.tp0;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class SaveAndLoad {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		try {
+			ParamsReader params = new ParamsReader(args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		BufferedImage img = null;
+		try {
+			img = ImageIO
+					.read(new File(
+							"/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/original.jpg"));
+			ImageIO.write(
+					img,
+					"jpg",
+					new File(
+							"/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/SaveAndLoad.png"));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+	}
+}

@@ -1,0 +1,42 @@
+package com.itba.imagenes.tp1;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class GrayGradient {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int width = 100;
+		int height = 100;
+		BufferedImage img = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+
+		// rgb = 0xFF 00=R FF=G 00=B; // green
+		// Empiezo con blanco
+		int rgb = 0xFFFFFF;
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				img.setRGB(i, j, rgb);
+			}
+
+			rgb -= 0x020202;
+		}
+
+		try {
+			ImageIO.write(
+					img,
+					"jpg",
+					new File(
+							"/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/GrayGradient.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
