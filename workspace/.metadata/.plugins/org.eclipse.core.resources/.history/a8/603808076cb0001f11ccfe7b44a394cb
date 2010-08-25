@@ -1,8 +1,0 @@
-package com.itba.imagenes.tp1;
-
-public class ImageReader {
-
-	public static BufferedImage read(String path) {
-
-	}
-}

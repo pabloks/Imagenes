@@ -1,4 +1,0 @@
-INDEX VERSION 1.126+/Users/iandrono/Documents/ITBA/Imagenes/Imagenes/workspace/.metadata/.plugins/org.eclipse.jdt.core
-1506130806.index
-784501728.index
-3907342129.index
