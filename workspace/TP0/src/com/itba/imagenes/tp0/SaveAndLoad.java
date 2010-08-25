@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.itba.imagenes.ParamsReader;
+
 public class SaveAndLoad {
 
 	/**
@@ -21,8 +23,8 @@ public class SaveAndLoad {
 
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(new File(params.inputImageName));
-			ImageIO.write(img, params.outputImageFormat, new File(
+			img = ImageIO.read(new File(params.inputImageName1));
+			ImageIO.write(img, params.imageFormat, new File(
 					params.outputImageName));
 		} catch (IOException e) {
 			System.out.println(e);

@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.itba.imagenes.ParamsReader;
+
 public class Create {
 
 	/**
@@ -29,7 +31,7 @@ public class Create {
 		}
 
 		try {
-			ImageIO.write(img, params.outputImageFormat, new File(
+			ImageIO.write(img, params.imageFormat, new File(
 					params.outputImageName));
 		} catch (IOException e) {
 			e.printStackTrace();

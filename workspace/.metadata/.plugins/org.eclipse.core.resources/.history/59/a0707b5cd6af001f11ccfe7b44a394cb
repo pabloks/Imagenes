@@ -1,0 +1,54 @@
+package com.itba.imagenes.tp1;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class MathOperators {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		ParamsReader params = null;
+		try {
+			params = new ParamsReader(args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		BufferedImage imgInput1 = null;
+		BufferedImage imgInput2 = null;
+
+		try {
+			imgInput1 = ImageIO.read(new File(params.inputImageName1));
+			imgInput2 = ImageIO.read(new File(params.inputImageName2));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+
+		int maxHeight = (imgInput1.getHeight() > imgInput2.getHeight() ? imgInput1
+				.getHeight() : imgInput2.getHeight());
+
+		int maxWidth = (imgInput1.getWidth() > imgInput2.getWidth() ? imgInput1
+				.getWidth() : imgInput2.getWidth());
+
+		BufferedImage imgOutput = new BufferedImage(maxWidth, maxHeight,
+				BufferedImage.TYPE_INT_RGB);
+
+		double[] rgb1;
+		double[] rgb2;
+
+		for (int i = 0; i < maxWidth; i++) {
+			for (int j = 0; j < maxHeight; j++) {
+				imgInput1.getRaster().getPixel(i, j, rgb1);
+				imgOutput.getRaster().setPixel(i, j, rgb1);
+			}
+		}
+
+		ImageIO.write(imgOutput, params.outputImageFormat, new File(
+				params.outputImageName));
+	}
+}

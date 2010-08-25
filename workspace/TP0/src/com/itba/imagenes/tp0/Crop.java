@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.itba.imagenes.ParamsReader;
+
 public class Crop {
 
 	/**
@@ -21,7 +23,7 @@ public class Crop {
 
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(new File(params.inputImageName));
+			img = ImageIO.read(new File(params.inputImageName1));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,7 +38,7 @@ public class Crop {
 		}
 
 		try {
-			ImageIO.write(croppedImage, params.outputImageFormat, new File(
+			ImageIO.write(croppedImage, params.imageFormat, new File(
 					params.outputImageName));
 		} catch (IOException e) {
 			e.printStackTrace();

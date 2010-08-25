@@ -3,6 +3,7 @@
 	<name>TP0</name>
 	<comment></comment>
 	<projects>
+		<project>ParamsReader</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
