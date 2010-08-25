@@ -39,7 +39,6 @@ public class Umbral {
 			for (int j = 0; j < imgInput1.getHeight(); j++) {
 
 				imgInput1.getRaster().getPixel(i, j, rgb1);
-
 				// Lo paso a gris con el promedio:
 				greyValue = (rgb1[0] + rgb1[1] + rgb1[2]) / 3;
 

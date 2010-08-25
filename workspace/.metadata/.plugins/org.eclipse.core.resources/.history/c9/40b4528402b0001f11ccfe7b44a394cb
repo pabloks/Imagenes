@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 import com.itba.imagenes.ParamsReader;
 
-public class Umbral {
+public class RangoDinamico {
 
 	/**
 	 * @param args

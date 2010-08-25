@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 import com.itba.imagenes.ParamsReader;
 
-public class Umbral {
+public class RangoDinamico {
 
 	/**
 	 * @param args
@@ -43,11 +43,8 @@ public class Umbral {
 				// Lo paso a gris con el promedio:
 				greyValue = (rgb1[0] + rgb1[1] + rgb1[2]) / 3;
 
-				// Le aplico umbral:
-				if (greyValue <= params.scalar)
-					greyValue = 0;
-				else
-					greyValue = 255;
+				// Le aplico rango dinamico:
+				greyValue = params.scalar * Math.log(greyValue+1);
 
 				rgb1[0] = greyValue;
 				rgb1[1] = greyValue;
