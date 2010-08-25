@@ -1,0 +1,18 @@
+package com.itba.imagenes.tp1;
+
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
+public class ImageReader {
+
+	public static BufferedImage read(String path, String format) {
+		BufferedImage image = null;
+		if( format.equalsIgnoreCase("raw")) {
+			
+		} else {
+			ImageIO.read(new File(path));
+		}
+		return image;
+	}
+}

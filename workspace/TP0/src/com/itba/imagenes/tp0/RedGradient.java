@@ -1,11 +1,8 @@
 package com.itba.imagenes.tp0;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class RedGradient {
@@ -16,6 +13,7 @@ public class RedGradient {
 	public static void main(String[] args) {
 		ParamsReader params = null;
 		try {
+			ParamsReader.workPath += "tp0/";
 			params = new ParamsReader(args);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -35,12 +33,8 @@ public class RedGradient {
 			rgb -= 0x000202;
 		}
 
-		try {
-			ImageIO.write(img, params.imageFormatOutput, new File(
-					params.outputImageName));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ImageHandler.write(img, params.imageFormatOutput,
+				params.outputImageName);
 	}
 
 }

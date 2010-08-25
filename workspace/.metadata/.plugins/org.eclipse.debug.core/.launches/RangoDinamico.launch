@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.itba.imagenes.tp1.RangoDinamico"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="inputImageName1=input1 imageFormatInput1=jpg outputImageName=rango imageFormatOutput=jpg scalar=140"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="inputImageName1=binario imageFormatInput1=bmp outputImageName=rangoBMP imageFormatOutput=jpg scalar=140"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="TP1"/>
 </launchConfiguration>

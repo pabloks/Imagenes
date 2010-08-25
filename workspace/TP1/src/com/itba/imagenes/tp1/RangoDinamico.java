@@ -1,11 +1,8 @@
 package com.itba.imagenes.tp1;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class RangoDinamico {
@@ -25,12 +22,8 @@ public class RangoDinamico {
 
 		BufferedImage imgInput1 = null;
 
-		try {
-			imgInput1 = ImageIO.read(new File(params.inputImageName1 + "."
-					+ params.imageFormatInput1));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
+		imgInput1 = ImageHandler.read(params.inputImageName1,
+				params.imageFormatInput1, params);
 
 		double[] rgb1 = new double[3];
 		double greyValue;
@@ -54,7 +47,7 @@ public class RangoDinamico {
 			}
 		}
 
-		ImageIO.write(imgInput1, params.imageFormatOutput, new File(
-				params.outputImageName + "." + params.imageFormatOutput));
+		ImageHandler.write(imgInput1, params.imageFormatOutput,
+				params.outputImageName);
 	}
 }

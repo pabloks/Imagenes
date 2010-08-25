@@ -1,0 +1,34 @@
+package com.itba.imagenes.tp1;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class ImageReader {
+
+	public static BufferedImage read(String path, String format) {
+		BufferedImage image = null;
+
+		if (format.equalsIgnoreCase("raw")) {
+			BufferedImage img = new BufferedImage(params.width, params.height,
+					BufferedImage.TYPE_INT_RGB);
+
+			for (int i = 0; i < params.width; i++) {
+				for (int j = 0; j < params.height; j++) {
+					img.setRGB(i, j, params.defaultRGB);
+				}
+			}
+		} else {
+			try {
+				image = ImageIO.read(new File(path));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return image;
+	}
+}

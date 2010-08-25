@@ -1,0 +1,74 @@
+package com.itba.imagenes;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class ImageHandler {
+
+	public static BufferedImage read(String name, String format,
+			ParamsReader params) {
+
+		BufferedImage image = null;
+		File imageFile = new File(name + "." + format);
+
+		if (format.equalsIgnoreCase("raw")) {
+			FileInputStream imageFileStream = null;
+
+			try {
+				imageFileStream = new FileInputStream(imageFile);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			BufferedImage img = new BufferedImage(params.width, params.height,
+					BufferedImage.TYPE_INT_RGB);
+
+			for (int i = 0; i < params.height; i++) {
+				for (int j = 0; j < params.width; j++) {
+					try {
+						img.setRGB(j, i, imageFileStream.read());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			image = img;
+		} else {
+			try {
+				image = ImageIO.read(imageFile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return image;
+	}
+
+	public static void write(BufferedImage img, String format, String name) {
+
+		File outputImage = new File(name + "." + format);
+		if (format.equalsIgnoreCase("pgm")) {
+			BufferedImage outputImg = new BufferedImage(img.getWidth(),
+					img..getHeight(), BufferedImage.TYPE_INT_RGB);
+			
+			
+		} else {
+
+			try {
+				ImageIO.write(img, format, outputImage);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+}

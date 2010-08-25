@@ -1,11 +1,8 @@
 package com.itba.imagenes.tp1;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class MathOperators {
@@ -26,16 +23,10 @@ public class MathOperators {
 		BufferedImage imgInput1 = null;
 		BufferedImage imgInput2 = null;
 
-		// BufferedImage image = ImageIO.read ( new ByteArrayInputStream (
-		// rawImageBytes ) );
-		try {
-			imgInput1 = ImageIO.read(new File(params.inputImageName1 + "."
-					+ params.imageFormatInput1));
-			imgInput2 = ImageIO.read(new File(params.inputImageName2 + "."
-					+ params.imageFormatInput2));
-		} catch (IOException e) {
-			System.out.println(e);
-		}
+		imgInput1 = ImageHandler.read(params.inputImageName1,
+				params.imageFormatInput1, params);
+		imgInput2 = ImageHandler.read(params.inputImageName2,
+				params.imageFormatInput2, params);
 
 		int maxHeight = (imgInput1.getHeight() > imgInput2.getHeight() ? imgInput1
 				.getHeight() : imgInput2.getHeight());
@@ -100,7 +91,7 @@ public class MathOperators {
 			}
 		}
 
-		ImageIO.write(imgOutput, params.imageFormatOutput, new File(
-				params.outputImageName + "." + params.imageFormatOutput));
+		ImageHandler.write(imgOutput, params.imageFormatOutput,
+				params.outputImageName);
 	}
 }
