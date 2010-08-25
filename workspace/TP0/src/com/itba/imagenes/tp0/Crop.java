@@ -38,7 +38,7 @@ public class Crop {
 		}
 
 		try {
-			ImageIO.write(croppedImage, params.imageFormat, new File(
+			ImageIO.write(croppedImage, params.imageFormatOutput, new File(
 					params.outputImageName));
 		} catch (IOException e) {
 			e.printStackTrace();

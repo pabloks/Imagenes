@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;imageFormatInput&apos; in &apos;com.itba.imagenes.ParamsReader&apos; to &apos;imageFormatInput1&apos;&#x0A;- Original project: &apos;ParamsReader&apos;&#x0A;- Original element: &apos;com.itba.imagenes.ParamsReader.imageFormatInput&apos;&#x0A;- Renamed element: &apos;com.itba.imagenes.ParamsReader.imageFormatInput1&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="false" description="Rename field &apos;imageFormatInput&apos;" flags="589830" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/src&lt;com.itba.imagenes{ParamsReader.java[ParamsReader^imageFormatInput" name="imageFormatInput1" references="true" setter="false" stamp="1282695838823" textual="false" version="1.0"/>
+</session>

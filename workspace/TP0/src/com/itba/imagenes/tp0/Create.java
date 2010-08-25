@@ -31,7 +31,7 @@ public class Create {
 		}
 
 		try {
-			ImageIO.write(img, params.imageFormat, new File(
+			ImageIO.write(img, params.imageFormatOutput, new File(
 					params.outputImageName));
 		} catch (IOException e) {
 			e.printStackTrace();
