@@ -2,7 +2,6 @@ package com.itba.imagenes.tp1;
 
 import java.awt.image.BufferedImage;
 
-import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class Umbral {
@@ -22,9 +21,7 @@ public class Umbral {
 
 		BufferedImage imgInput1 = null;
 
-		imgInput1 = ImageHandler.read(params.inputImageName1,
-				params.imageFormatInput1, params);
-
+		imgInput1 = params.loadNextImage();
 		double[] rgb1 = new double[3];
 		double greyValue;
 
@@ -50,7 +47,6 @@ public class Umbral {
 			}
 		}
 
-		ImageHandler.write(imgInput1, params.imageFormatOutput,
-				params.outputImageName);
+		params.saveImage(imgInput1);
 	}
 }

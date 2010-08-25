@@ -2,7 +2,6 @@ package com.itba.imagenes.tp0;
 
 import java.awt.image.BufferedImage;
 
-import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class LoadAndSave {
@@ -20,9 +19,7 @@ public class LoadAndSave {
 		}
 
 		BufferedImage img = null;
-		img = ImageHandler.read(params.inputImageName1,
-				params.imageFormatInput1, params);
-		ImageHandler.write(img, params.imageFormatOutput,
-				params.outputImageName);
+		img = params.loadNextImage();
+		params.saveImage(img);
 	}
 }

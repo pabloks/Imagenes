@@ -2,7 +2,6 @@ package com.itba.imagenes.tp0;
 
 import java.awt.image.BufferedImage;
 
-import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class Crop {
@@ -20,19 +19,17 @@ public class Crop {
 		}
 
 		BufferedImage img = null;
-		img = ImageHandler.read(params.inputImageName1,
-				params.imageFormatInput1, params);
+		img = params.loadNextImage();
 
-		BufferedImage croppedImage = new BufferedImage(params.width,
-				params.height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage croppedImage = new BufferedImage(params.width1,
+				params.height1, BufferedImage.TYPE_INT_RGB);
 
-		for (int i = 0; i < params.width; i++) {
-			for (int j = 0; j < params.height; j++) {
+		for (int i = 0; i < params.width1; i++) {
+			for (int j = 0; j < params.height1; j++) {
 				croppedImage.setRGB(i, j, img.getRGB(i, j));
 			}
 		}
 
-		ImageHandler.write(croppedImage, params.imageFormatOutput,
-				params.outputImageName);
+		params.saveImage(croppedImage);
 	}
 }

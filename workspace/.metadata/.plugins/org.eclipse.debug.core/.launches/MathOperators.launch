@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.itba.imagenes.tp1.MathOperators"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="inputImageName1=input1 imageFormatInput1=jpg inputImageName2=input2 imageFormatInput2=jpg outputImageName=suma imageFormatOutput=jpg oper=suma"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="inputImageName1=girl imageFormatInput1=raw inputImageName2=input1 imageFormatInput2=jpg outputImageName=girlMasSimp imageFormatOutput=jpg width=389 height=164 oper=suma"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="TP1"/>
 </launchConfiguration>

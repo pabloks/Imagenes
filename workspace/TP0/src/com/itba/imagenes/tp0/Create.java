@@ -2,7 +2,6 @@ package com.itba.imagenes.tp0;
 
 import java.awt.image.BufferedImage;
 
-import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class Create {
@@ -19,16 +18,15 @@ public class Create {
 			e.printStackTrace();
 		}
 
-		BufferedImage img = new BufferedImage(params.width, params.height,
+		BufferedImage img = new BufferedImage(params.width1, params.height1,
 				BufferedImage.TYPE_INT_RGB);
 
-		for (int i = 0; i < params.width; i++) {
-			for (int j = 0; j < params.height; j++) {
+		for (int i = 0; i < params.width1; i++) {
+			for (int j = 0; j < params.height1; j++) {
 				img.setRGB(i, j, params.defaultRGB);
 			}
 		}
 
-		ImageHandler.write(img, params.imageFormatOutput,
-				params.outputImageName);
+		params.saveImage(img);
 	}
 }

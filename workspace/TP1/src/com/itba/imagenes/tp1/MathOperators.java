@@ -2,7 +2,6 @@ package com.itba.imagenes.tp1;
 
 import java.awt.image.BufferedImage;
 
-import com.itba.imagenes.ImageHandler;
 import com.itba.imagenes.ParamsReader;
 
 public class MathOperators {
@@ -23,10 +22,8 @@ public class MathOperators {
 		BufferedImage imgInput1 = null;
 		BufferedImage imgInput2 = null;
 
-		imgInput1 = ImageHandler.read(params.inputImageName1,
-				params.imageFormatInput1, params);
-		imgInput2 = ImageHandler.read(params.inputImageName2,
-				params.imageFormatInput2, params);
+		imgInput1 = params.loadNextImage();
+		imgInput2 = params.loadNextImage();
 
 		int maxHeight = (imgInput1.getHeight() > imgInput2.getHeight() ? imgInput1
 				.getHeight() : imgInput2.getHeight());
@@ -62,20 +59,20 @@ public class MathOperators {
 
 				if (params.oper.equalsIgnoreCase("suma")) {
 					out[0] = rgb1[0] + rgb2[0];
-					out[0] = rgb1[0] + rgb2[0];
-					out[0] = rgb1[0] + rgb2[0];
+					out[1] = rgb1[1] + rgb2[1];
+					out[2] = rgb1[2] + rgb2[2];
 				} else if (params.oper.equalsIgnoreCase("resta")) {
 					out[0] = rgb1[0] - rgb2[0];
-					out[0] = rgb1[0] - rgb2[0];
-					out[0] = rgb1[0] - rgb2[0];
+					out[1] = rgb1[1] - rgb2[1];
+					out[2] = rgb1[2] - rgb2[2];
 				} else if (params.oper.equalsIgnoreCase("mult")) {
 					out[0] = rgb1[0] * rgb2[0];
-					out[0] = rgb1[0] * rgb2[0];
-					out[0] = rgb1[0] * rgb2[0];
+					out[1] = rgb1[1] * rgb2[1];
+					out[2] = rgb1[2] * rgb2[2];
 				} else if (params.oper.equalsIgnoreCase("scalar")) {
 					out[0] = rgb1[0] * params.scalar;
-					out[0] = rgb1[0] * params.scalar;
-					out[0] = rgb1[0] * params.scalar;
+					out[1] = rgb1[1] * params.scalar;
+					out[2] = rgb1[2] * params.scalar;
 				} else
 					throw new Exception("Parametro invalido");
 
@@ -91,7 +88,6 @@ public class MathOperators {
 			}
 		}
 
-		ImageHandler.write(imgOutput, params.imageFormatOutput,
-				params.outputImageName);
+		params.saveImage(imgOutput);
 	}
 }
