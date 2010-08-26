@@ -10,14 +10,7 @@ public class Umbral {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
-		ParamsReader params = null;
-		try {
-			ParamsReader.workPath += "tp1/";
-			params = new ParamsReader(args);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public static void UmbralFunction(ParamsReader params) throws Exception {
 
 		BufferedImage imgInput1 = null;
 
