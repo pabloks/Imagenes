@@ -3,10 +3,14 @@ package com.itba.imagenes.tp1;
 import java.awt.image.BufferedImage;
 
 import com.itba.imagenes.Color;
+import com.itba.imagenes.ParamsReader;
 
-public class Histogram {
+public class PabloksUtils {
 
-	public static BufferedImage negative(BufferedImage image) {
+	public static void negative(ParamsReader params) {
+
+		BufferedImage image = params.loadNextImage();
+
 		int width = image.getWidth();
 		int height = image.getHeight();
 
@@ -25,7 +29,7 @@ public class Histogram {
 			}
 		}
 
-		return newImage;
+		params.saveImage(image);
 	}
 
 	public static BufferedImage blackAndWhite(BufferedImage image, Color color) {

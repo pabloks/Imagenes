@@ -26,6 +26,8 @@ public class TP1 {
 				RangoDinamico.RangoDinamicoFunction(params);
 			} else if (params.oper.equalsIgnoreCase("umbral")) {
 				Umbral.UmbralFunction(params);
+			} else if (params.oper.equalsIgnoreCase("negative")) {
+				PabloksUtils.negative(params);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
