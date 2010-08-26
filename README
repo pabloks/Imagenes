@@ -1,0 +1,19 @@
+java -jar TP1.jar oper={suma, resta, mult, scalar, rdin‡mico, umbral, negative} inputImageName1={nombre de la imagen SIN el ".format"} imageFormatInput1={jpg,raw,pgm,etc. Formato de la imagen anterior} inputImageName2={igual que el anterior, para operaciones de dos im‡genes} imageFormatInput2={jpg,raw,pgm,etc} scalar={doble, para operaciones que necesitan un escalar, como umbral, escalar, etc} width1,height1 si inputImageName1 es raw hay que aclarar su medida, igual apra width2 y height2.
+defaultRGB={valor por default para estera un color}
+
+
+public static String workPath = "/Users/iandrono/Documents/ITBA/Imagenes/tps/";
+	public String inputImageName1 = "/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/input";
+	public String inputImageName2 = "/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/input";
+	public String outputImageName = "/Users/iandrono/Documents/ITBA/Imagenes/tps/tp0/output";
+	public String imageFormatOutput = "jpg";
+	public String imageFormatInput1 = "jpg";
+	public String imageFormatInput2 = "jpg";
+	public String oper = "suma";
+
+	public int width1 = 100;
+	public int height1 = 100;
+	public int width2 = 100;
+	public int height2 = 100;
+	public int defaultRGB = 0x00FF00;
+	public double scalar = 0.5;
