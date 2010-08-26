@@ -1,6 +1,7 @@
 package com.itba.imagenes;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 
 public class ImageUtils {
 
@@ -102,7 +103,7 @@ public class ImageUtils {
 		return newImage;
 	}
 
-	public static BufferedImage blackAndWhite(BufferedImage image, Color color) {
+	public static BufferedImage blackAndWhite(BufferedImage image, String colorStr) {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		int index;
@@ -111,6 +112,7 @@ public class ImageUtils {
 		BufferedImage newImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 
+		Color color = Color.valueOf(colorStr);
 		if (color == Color.RED) {
 			index = 0;
 		} else if (color == Color.GREEN) {
@@ -180,7 +182,6 @@ public class ImageUtils {
 
 		for (int i = 0; i < newImage.getWidth(); i++) {
 			y = histogram[i] * 255 / max;
-			System.out.println(i + " " + y);
 			for (int j = 0; j < y; j++) {
 				newImage.getRaster().setPixel(i, height - 1 - j, black);
 			}
@@ -246,5 +247,73 @@ public class ImageUtils {
 		}
 
 		return imgInput1;
+	}
+	
+	public static BufferedImage equalizate(BufferedImage image, String colorStr){
+		int width = image.getWidth();
+		int height = image.getHeight();
+		int index;
+		double[] rgb = new double[3];
+		int[] histogram = new int[256];
+		double[] s = new double[256];
+
+		Color color = Color.valueOf(colorStr);
+		
+		if (color == Color.RED) {
+			index = 0;
+		} else if (color == Color.GREEN) {
+			index = 1;
+		} else {
+			index = 2;
+		}
+
+		//obtain levels of grey
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				image.getRaster().getPixel(i, j, rgb);
+				histogram[(int) rgb[index]]++;
+
+			}
+		}
+		
+		long totalPixels = width * height;
+		
+		//make s
+		for(int i=0; i<256; i++){
+			s[i] = getSk(histogram, i, totalPixels);
+		}
+		
+		//obtain minimin
+		double[] aux = s.clone();
+		Arrays.sort(aux);
+		double smin = aux[0];
+		
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		
+		double[] rgbAux = new double[3];
+		
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				//obtain pixel
+				image.getRaster().getPixel(i, j, rgb);
+				//put new pixel
+				rgbAux[0] =  (int)((s[(int)rgb[index]])*255);
+				rgbAux[1] = rgbAux[0];
+				rgbAux[2] = rgbAux[0];
+				newImage.getRaster().setPixel(i, j, rgbAux);
+			}
+		}
+		
+		return newImage;
+	}
+	
+	private static double getSk(int[] greyValues, int k, long totalPixels){
+		double aux = 0;
+		for(int i=0; i<=k; i++){
+			aux += ((double)greyValues[i])/totalPixels;
+		}
+		
+		return aux;
 	}
 }
