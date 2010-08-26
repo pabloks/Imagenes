@@ -24,6 +24,7 @@ public class ParamsReader {
 	public String imageFormatInput1 = "jpg";
 	public String imageFormatInput2 = "jpg";
 	public String oper = "suma";
+	public String color = "R";
 
 	public int width1 = 100;
 	public int height1 = 100;

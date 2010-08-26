@@ -39,6 +39,8 @@ public class TP1 {
 				output = ImageUtils.UmbralFunction(inputImage1, params.scalar);
 			} else if (params.oper.equalsIgnoreCase("negative")) {
 				output = ImageUtils.negative(inputImage1);
+			} else if (params.oper.equalsIgnoreCase("histogram")) {
+				output = ImageUtils.getHistogram(inputImage1, params.color);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

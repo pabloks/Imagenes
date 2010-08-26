@@ -133,12 +133,14 @@ public class ImageUtils {
 		return newImage;
 	}
 
-	public static BufferedImage getHistogram(BufferedImage img, Color color) {
+	public static BufferedImage getHistogram(BufferedImage img, String colorStr) {
 		int width = img.getWidth();
 		int height = img.getHeight();
 		int index;
 		double[] rgb = new double[3];
 		int[] histogram = new int[256];
+
+		Color color = Color.valueOf(colorStr);
 
 		if (color == Color.RED) {
 			index = 0;
