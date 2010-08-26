@@ -103,7 +103,8 @@ public class ImageUtils {
 		return newImage;
 	}
 
-	public static BufferedImage blackAndWhite(BufferedImage image, String colorStr) {
+	public static BufferedImage blackAndWhite(BufferedImage image,
+			String colorStr) {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		int index;
@@ -248,8 +249,8 @@ public class ImageUtils {
 
 		return imgInput1;
 	}
-	
-	public static BufferedImage equalizate(BufferedImage image, String colorStr){
+
+	public static BufferedImage equalizate(BufferedImage image, String colorStr) {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		int index;
@@ -258,7 +259,7 @@ public class ImageUtils {
 		double[] s = new double[256];
 
 		Color color = Color.valueOf(colorStr);
-		
+
 		if (color == Color.RED) {
 			index = 0;
 		} else if (color == Color.GREEN) {
@@ -267,7 +268,7 @@ public class ImageUtils {
 			index = 2;
 		}
 
-		//obtain levels of grey
+		// obtain levels of grey
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				image.getRaster().getPixel(i, j, rgb);
@@ -275,45 +276,45 @@ public class ImageUtils {
 
 			}
 		}
-		
+
 		long totalPixels = width * height;
-		
-		//make s
-		for(int i=0; i<256; i++){
+
+		// make s
+		for (int i = 0; i < 256; i++) {
 			s[i] = getSk(histogram, i, totalPixels);
 		}
-		
-		//obtain minimin
+
+		// obtain minimin
 		double[] aux = s.clone();
 		Arrays.sort(aux);
-		double smin = aux[0];
-		
+		// double smin = aux[0];
+
 		BufferedImage newImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
-		
+
 		double[] rgbAux = new double[3];
-		
+
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				//obtain pixel
+				// obtain pixel
 				image.getRaster().getPixel(i, j, rgb);
-				//put new pixel
-				rgbAux[0] =  (int)((s[(int)rgb[index]])*255);
+				// put new pixel
+				rgbAux[0] = (int) ((s[(int) rgb[index]]) * 255);
 				rgbAux[1] = rgbAux[0];
 				rgbAux[2] = rgbAux[0];
 				newImage.getRaster().setPixel(i, j, rgbAux);
 			}
 		}
-		
+
 		return newImage;
 	}
-	
-	private static double getSk(int[] greyValues, int k, long totalPixels){
+
+	private static double getSk(int[] greyValues, int k, long totalPixels) {
 		double aux = 0;
-		for(int i=0; i<=k; i++){
-			aux += ((double)greyValues[i])/totalPixels;
+		for (int i = 0; i <= k; i++) {
+			aux += ((double) greyValues[i]) / totalPixels;
 		}
-		
+
 		return aux;
 	}
 }
