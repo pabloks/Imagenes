@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import com.itba.imagenes.Color;
+import com.itba.imagenes.ImageMask;
 import com.itba.imagenes.ImageUtils;
  
 // do not import the package when you are already in it
@@ -39,6 +40,10 @@ public class UI extends JFrame {
     private JButton btnActionjButton1 = null;
     private JButton btnActionjButtonBW = null;
     private JButton btnActionjButtonHist = null;
+    private JButton btnActionjButtonFilt3 = null;
+    private JButton btnActionjButtonFilt3l = null;
+    private JButton btnActionjButtonFilt5 = null;
+    private JButton btnActionjButtonFilt5l = null;
     private JLabel jLabel = null;
     private JPanel jContentPane1 = null;
     private JTextField PathImage = null;
@@ -68,6 +73,10 @@ public class UI extends JFrame {
             jContentPane.add(getBtnActionjButton1(), null);
             jContentPane.add(getBtnActionjButtonBW(), null);
             jContentPane.add(getBtnActionjButtonHist(), null);
+            jContentPane.add(getBtnActionjButtonFilt3high(), null);
+            jContentPane.add(getBtnActionjButtonFilt3low(), null);
+            jContentPane.add(getBtnActionjButtonFilt5high(), null);
+            jContentPane.add(getBtnActionjButtonFilt5low(), null);
             
 //            jContentPane.add(jLabel, null);
         }
@@ -175,6 +184,99 @@ public class UI extends JFrame {
             });
         }
         return btnActionjButtonHist;
+    }
+    
+
+    private JButton getBtnActionjButtonFilt3high() {
+        if (btnActionjButtonFilt3 == null) {
+        	btnActionjButtonFilt3 = new JButton();
+        	btnActionjButtonFilt3.setBounds(new Rectangle(301, 50, 140, 16));
+        	btnActionjButtonFilt3.setText("Filter 3x3 High");
+        	btnActionjButtonFilt3.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    double[][] values = {
+                    		{-1, -1, -1}, 
+                    		{-1, 8, -1}, 
+                    		{-1, -1, -1}};
+                    ImageMask mask = new ImageMask(values, 3);
+                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
+                    openImage(aux, "Filter 3x3 High");
+                }
+            });
+        }
+        return btnActionjButtonFilt3;
+    }
+    
+    private JButton getBtnActionjButtonFilt3low() {
+        if (btnActionjButtonFilt3l == null) {
+        	btnActionjButtonFilt3l = new JButton();
+        	btnActionjButtonFilt3l.setBounds(new Rectangle(301, 70, 140, 16));
+        	btnActionjButtonFilt3l.setText("Filter 3x3 Low");
+        	btnActionjButtonFilt3l.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    double[][] values = {
+                    		{1, 1, 1}, 
+                    		{1, 1, 1}, 
+                    		{1, 1, 1}};
+                    ImageMask mask = new ImageMask(values, 3);
+                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
+                    openImage(aux, "Filter 3x3 Low");
+                }
+            });
+        }
+        return btnActionjButtonFilt3l;
+    }
+    
+    private JButton getBtnActionjButtonFilt5high() {
+        if (btnActionjButtonFilt5 == null) {
+        	btnActionjButtonFilt5 = new JButton();
+        	btnActionjButtonFilt5.setBounds(new Rectangle(301, 90, 140, 16));
+        	btnActionjButtonFilt5.setText("Filter 5x5 High");
+        	btnActionjButtonFilt5.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    double[][] values = {
+                    		{-1, -1, -1, -1 , -1}, 
+                    		{-1, -1, -1, -1 , -1},
+                    		{-1, -1, 24, -1, -1},
+                    		{-1, -1, -1, -1 , -1},
+                    		{-1, -1, -1, -1, -1}};
+                    ImageMask mask = new ImageMask(values, 5);
+                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
+                    openImage(aux, "Filter 5x5 High");
+                }
+            });
+        }
+        return btnActionjButtonFilt5;
+    }
+    
+    private JButton getBtnActionjButtonFilt5low() {
+        if (btnActionjButtonFilt5l == null) {
+        	btnActionjButtonFilt5l = new JButton();
+        	btnActionjButtonFilt5l.setBounds(new Rectangle(301, 110, 140, 16));
+        	btnActionjButtonFilt5l.setText("Filter 5x5 Low");
+        	btnActionjButtonFilt5l.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    double[][] values = {
+                    		{1, 1, 1, 1 , 1},
+                    		{1, 1, 1, 1 , 1},
+                    		{1, 1, 1, 1 , 1},
+                    		{1, 1, 1, 1 , 1},
+                    		{1, 1, 1, 1 , 1}};
+                    ImageMask mask = new ImageMask(values, 5);
+                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
+                    openImage(aux, "Filter 5x5 Low");
+                }
+            });
+        }
+        return btnActionjButtonFilt5l;
     }
     
     private void openImage(BufferedImage image, String Title){

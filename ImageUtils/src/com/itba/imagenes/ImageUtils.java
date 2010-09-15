@@ -319,4 +319,51 @@ public class ImageUtils {
 
 		return aux;
 	}
+	
+	public static BufferedImage filterImage(BufferedImage image, ImageMask mask){
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		
+		int borderDistance = (int)(mask.getCount()/2);
+		
+		// obtain pixels
+		for (int i = borderDistance; i < width-borderDistance; i++) {
+			for (int j = borderDistance; j < height-borderDistance; j++) {
+				//for each pixel
+				newImage.getRaster().setPixel(i, j, 
+					applyMask(image, mask, i, j));
+			}
+		}
+
+		return newImage;
+	}
+	
+	private static double[] applyMask(BufferedImage image, ImageMask mask, int x, int y){
+		int borderDistance = (int)(mask.getCount()/2);
+		int count = mask.getCount()*mask.getCount();
+		double[] rgb = new double[3];
+		double[] newPixel = new double[3];
+		double aux;
+
+		for (int i = 0; i < mask.getCount(); i++) {
+			for (int j = 0; j < mask.getCount(); j++) {
+				//get pixel
+				image.getRaster().getPixel(x + i - borderDistance, y + j - borderDistance, rgb);
+				//apply filter
+				aux = mask.getValue(i, j);
+				newPixel[0] += rgb[0]*aux/count;
+				newPixel[1] += rgb[1]*aux/count;
+				newPixel[2] += rgb[2]*aux/count;
+			}
+		}
+		
+		newPixel[0] = Math.max(newPixel[0], 0);
+		newPixel[1] = Math.max(newPixel[1], 0);
+		newPixel[2] = Math.max(newPixel[2], 0);
+		
+		return newPixel;
+	}
 }
