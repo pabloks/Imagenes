@@ -274,12 +274,7 @@ public class ImageUtils {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				image.getRaster().getPixel(i, j, rgb);
-				if (color == Color.PROM) {
-					prom = (int) ((rgb[0] + rgb[1] + rgb[2]) / 3);
-					histogram[prom]++;
-				} else {
-					histogram[(int) rgb[index]]++;
-				}
+				histogram[(int) rgb[index]]++;
 
 			}
 		}
@@ -323,5 +318,54 @@ public class ImageUtils {
 		}
 
 		return aux;
+	}
+	
+	public static BufferedImage filterImage(BufferedImage image, ImageMask mask){
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		
+		int borderDistanceW = (int)(mask.getWidth()/2);
+		int borderDistanceH = (int)(mask.getHeight()/2);
+		
+		// obtain pixels
+		for (int i = borderDistanceW; i < width-borderDistanceW; i++) {
+			for (int j = borderDistanceH; j < height-borderDistanceH; j++) {
+				//for each pixel
+				newImage.getRaster().setPixel(i, j, 
+					applyMask(image, mask, i, j));
+			}
+		}
+
+		return newImage;
+	}
+	
+	private static double[] applyMask(BufferedImage image, ImageMask mask, int x, int y){
+		int borderDistanceW = (int)(mask.getWidth()/2);
+		int borderDistanceH = (int)(mask.getHeight()/2);
+		int count = mask.getWidth()*mask.getHeight();
+		double[] rgb = new double[3];
+		double[] newPixel = new double[3];
+		double aux;
+
+		for (int i = 0; i < mask.getWidth(); i++) {
+			for (int j = 0; j < mask.getHeight(); j++) {
+				//get pixel
+				image.getRaster().getPixel(x + i - borderDistanceW, y + j - borderDistanceH, rgb);
+				//apply filter
+				aux = mask.getValue(i, j);
+				newPixel[0] += rgb[0]*aux/count;
+				newPixel[1] += rgb[1]*aux/count;
+				newPixel[2] += rgb[2]*aux/count;
+			}
+		}
+		
+		newPixel[0] = Math.max(newPixel[0], 0);
+		newPixel[1] = Math.max(newPixel[1], 0);
+		newPixel[2] = Math.max(newPixel[2], 0);
+		
+		return newPixel;
 	}
 }
