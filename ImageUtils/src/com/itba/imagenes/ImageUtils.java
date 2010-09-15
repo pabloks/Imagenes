@@ -268,11 +268,18 @@ public class ImageUtils {
 			index = 2;
 		}
 
+		int prom = 0;
+
 		// obtain levels of grey
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				image.getRaster().getPixel(i, j, rgb);
-				histogram[(int) rgb[index]]++;
+				if (color == Color.PROM) {
+					prom = (int) ((rgb[0] + rgb[1] + rgb[2]) / 3);
+					histogram[prom]++;
+				} else {
+					histogram[(int) rgb[index]]++;
+				}
 
 			}
 		}
