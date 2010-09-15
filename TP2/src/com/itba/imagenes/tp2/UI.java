@@ -19,6 +19,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
+import com.itba.imagenes.Color;
+import com.itba.imagenes.ImageUtils;
  
 // do not import the package when you are already in it
 // everything inside the package is accessible as-is
@@ -34,6 +37,8 @@ public class UI extends JFrame {
     private JMenuItem menuItemOpen = null;
     private JMenuItem menuItemClose = null;
     private JButton btnActionjButton1 = null;
+    private JButton btnActionjButtonBW = null;
+    private JButton btnActionjButtonHist = null;
     private JLabel jLabel = null;
     private JPanel jContentPane1 = null;
     private JTextField PathImage = null;
@@ -61,6 +66,9 @@ public class UI extends JFrame {
             jContentPane.setLayout(null);
             jContentPane.add(lblname, null);
             jContentPane.add(getBtnActionjButton1(), null);
+            jContentPane.add(getBtnActionjButtonBW(), null);
+            jContentPane.add(getBtnActionjButtonHist(), null);
+            
 //            jContentPane.add(jLabel, null);
         }
         return jContentPane;
@@ -135,22 +143,57 @@ public class UI extends JFrame {
     }
     
     
-    private JButton getBtnActionjButton4() {
-        if (btnActionjButton1 == null) {
-            btnActionjButton1 = new JButton();
-            btnActionjButton1.setBounds(new Rectangle(201, 10, 98, 16));
-            btnActionjButton1.setText("Black And White");
-            btnActionjButton1.addActionListener(new java.awt.event.ActionListener() {
+    private JButton getBtnActionjButtonBW() {
+        if (btnActionjButtonBW == null) {
+            btnActionjButtonBW = new JButton();
+            btnActionjButtonBW.setBounds(new Rectangle(301, 10, 140, 16));
+            btnActionjButtonBW.setText("Black And White");
+            btnActionjButtonBW.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("actionPerformed() by Browse");
                     // TODO Auto-generated Event stub actionPerformed()
-                    openDialog();
+                    BufferedImage aux = ImageUtils.blackAndWhite(_image, Color.RED.toString());
+                    openImage(aux, "Black And White");
                 }
             });
         }
-        return btnActionjButton1;
+        return btnActionjButtonBW;
     }
     
+    private JButton getBtnActionjButtonHist() {
+        if (btnActionjButtonHist == null) {
+        	btnActionjButtonHist = new JButton();
+        	btnActionjButtonHist.setBounds(new Rectangle(301, 30, 140, 16));
+            btnActionjButtonHist.setText("Histogram");
+            btnActionjButtonHist.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    BufferedImage aux = ImageUtils.getHistogram(_image, Color.RED.toString());
+                    openImage(aux, "Histogram");
+                }
+            });
+        }
+        return btnActionjButtonHist;
+    }
+    
+    private void openImage(BufferedImage image, String Title){
+        //System.out.println("namePathImage = " + namePathImage);
+        JPanel panel = null;
+        
+        try {
+			panel = getJContentPane1(image);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        JDialog d = new JDialog(this, Title, false);
+        d.getContentPane().add(panel);
+        d.pack();
+        d.setLocationRelativeTo(this);
+        d.setVisible(true);
+    }
  
     /**
      * This method initializes btnActionjButton1 - Browse	
