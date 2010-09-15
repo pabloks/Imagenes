@@ -37,6 +37,7 @@ public class UI extends JFrame {
     private JLabel jLabel = null;
     private JPanel jContentPane1 = null;
     private JTextField PathImage = null;
+    private BufferedImage _image;
     String namePathImage = null;
     JFileChooser chooser = new JFileChooser(".");
  
@@ -179,6 +180,7 @@ public class UI extends JFrame {
             //System.out.println("namePathImage = " + namePathImage);
             JPanel panel = null;
             try {
+            	_image = ImageIO.read(new File(namePathImage));
                 panel = getJContentPane1();
             } catch(IOException e) {
                 System.out.println("io error: " + e.getMessage());
@@ -203,6 +205,13 @@ public class UI extends JFrame {
      * @throws IOException 
      */
     private JPanel getJContentPane1() throws IOException {
+        if(_image != null) {
+            return getJContentPane1(_image);
+        }
+        return jContentPane1;
+    }
+    
+    private JPanel getJContentPane1(BufferedImage image) throws IOException {
         if (jContentPane1 == null) {
             jContentPane1 = new JPanel();
             jContentPane1.setLayout(new BorderLayout());
@@ -214,10 +223,7 @@ public class UI extends JFrame {
             jContentPane1.remove(1);
         JLabel label = new JLabel();
         label.setHorizontalAlignment(JLabel.CENTER);
-        if(namePathImage != null) {
-            File file = new File(namePathImage);
-            //System.out.println("file path = " + file.getPath());
-            BufferedImage image = ImageIO.read(file);
+        if(image != null) {
             ImageIcon icon = new ImageIcon(image);
             label.setIcon(icon);
         } else {
