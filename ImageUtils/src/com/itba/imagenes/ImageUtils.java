@@ -274,12 +274,7 @@ public class ImageUtils {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				image.getRaster().getPixel(i, j, rgb);
-				if (color == Color.PROM) {
-					prom = (int) ((rgb[0] + rgb[1] + rgb[2]) / 3);
-					histogram[prom]++;
-				} else {
-					histogram[(int) rgb[index]]++;
-				}
+				histogram[(int) rgb[index]]++;
 
 			}
 		}
