@@ -327,11 +327,12 @@ public class ImageUtils {
 		BufferedImage newImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 		
-		int borderDistance = (int)(mask.getCount()/2);
+		int borderDistanceW = (int)(mask.getWidth()/2);
+		int borderDistanceH = (int)(mask.getHeight()/2);
 		
 		// obtain pixels
-		for (int i = borderDistance; i < width-borderDistance; i++) {
-			for (int j = borderDistance; j < height-borderDistance; j++) {
+		for (int i = borderDistanceW; i < width-borderDistanceW; i++) {
+			for (int j = borderDistanceH; j < height-borderDistanceH; j++) {
 				//for each pixel
 				newImage.getRaster().setPixel(i, j, 
 					applyMask(image, mask, i, j));
@@ -342,16 +343,17 @@ public class ImageUtils {
 	}
 	
 	private static double[] applyMask(BufferedImage image, ImageMask mask, int x, int y){
-		int borderDistance = (int)(mask.getCount()/2);
-		int count = mask.getCount()*mask.getCount();
+		int borderDistanceW = (int)(mask.getWidth()/2);
+		int borderDistanceH = (int)(mask.getHeight()/2);
+		int count = mask.getWidth()*mask.getHeight();
 		double[] rgb = new double[3];
 		double[] newPixel = new double[3];
 		double aux;
 
-		for (int i = 0; i < mask.getCount(); i++) {
-			for (int j = 0; j < mask.getCount(); j++) {
+		for (int i = 0; i < mask.getWidth(); i++) {
+			for (int j = 0; j < mask.getHeight(); j++) {
 				//get pixel
-				image.getRaster().getPixel(x + i - borderDistance, y + j - borderDistance, rgb);
+				image.getRaster().getPixel(x + i - borderDistanceW, y + j - borderDistanceH, rgb);
 				//apply filter
 				aux = mask.getValue(i, j);
 				newPixel[0] += rgb[0]*aux/count;

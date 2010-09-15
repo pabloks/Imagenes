@@ -200,7 +200,7 @@ public class UI extends JFrame {
                     		{-1, -1, -1}, 
                     		{-1, 8, -1}, 
                     		{-1, -1, -1}};
-                    ImageMask mask = new ImageMask(values, 3);
+                    ImageMask mask = new ImageMask(values, 3, 3);
                     BufferedImage aux = ImageUtils.filterImage(_image, mask);
                     openImage(aux, "Filter 3x3 High");
                 }
@@ -222,7 +222,7 @@ public class UI extends JFrame {
                     		{1, 1, 1}, 
                     		{1, 1, 1}, 
                     		{1, 1, 1}};
-                    ImageMask mask = new ImageMask(values, 3);
+                    ImageMask mask = new ImageMask(values, 3, 3);
                     BufferedImage aux = ImageUtils.filterImage(_image, mask);
                     openImage(aux, "Filter 3x3 Low");
                 }
@@ -246,7 +246,7 @@ public class UI extends JFrame {
                     		{-1, -1, 24, -1, -1},
                     		{-1, -1, -1, -1 , -1},
                     		{-1, -1, -1, -1, -1}};
-                    ImageMask mask = new ImageMask(values, 5);
+                    ImageMask mask = new ImageMask(values, 5, 5);
                     BufferedImage aux = ImageUtils.filterImage(_image, mask);
                     openImage(aux, "Filter 5x5 High");
                 }
@@ -270,7 +270,7 @@ public class UI extends JFrame {
                     		{1, 1, 1, 1 , 1},
                     		{1, 1, 1, 1 , 1},
                     		{1, 1, 1, 1 , 1}};
-                    ImageMask mask = new ImageMask(values, 5);
+                    ImageMask mask = new ImageMask(values, 5, 5);
                     BufferedImage aux = ImageUtils.filterImage(_image, mask);
                     openImage(aux, "Filter 5x5 Low");
                 }
