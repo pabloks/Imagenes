@@ -257,7 +257,7 @@ public class UI extends JFrame {
 							// TODO Auto-generated Event stub actionPerformed()
 							double[][] values = { { -1, -1, -1 },
 									{ -1, 8, -1 }, { -1, -1, -1 } };
-							ImageMask mask = new ImageMask(values, 3, 3);
+							ImageMask mask = new ImageMask(values, 3, 3, 9);
 							_lastImage = ImageUtils.filterImage(
 									getSelectedImage(), mask);
 							openImage(_lastImage, "Filter 3x3 High");
@@ -279,7 +279,7 @@ public class UI extends JFrame {
 							// TODO Auto-generated Event stub actionPerformed()
 							double[][] values = { { 1, 1, 1 }, { 1, 1, 1 },
 									{ 1, 1, 1 } };
-							ImageMask mask = new ImageMask(values, 3, 3);
+							ImageMask mask = new ImageMask(values, 3, 3, 9);
 							_lastImage = ImageUtils.filterImage(
 									getSelectedImage(), mask);
 							openImage(_lastImage, "Filter 3x3 Low");
@@ -304,7 +304,7 @@ public class UI extends JFrame {
 									{ -1, -1, 24, -1, -1 },
 									{ -1, -1, -1, -1, -1 },
 									{ -1, -1, -1, -1, -1 } };
-							ImageMask mask = new ImageMask(values, 5, 5);
+							ImageMask mask = new ImageMask(values, 5, 5, 9);
 							_lastImage = ImageUtils.filterImage(
 									getSelectedImage(), mask);
 							openImage(_lastImage, "Filter 5x5 High");
@@ -324,7 +324,7 @@ public class UI extends JFrame {
 				// TODO Auto-generated Event stub actionPerformed()
 				double[][] values = { { 1, 1, 1, 1, 1 }, { 1, 1, 1, 1, 1 },
 						{ 1, 1, 1, 1, 1 }, { 1, 1, 1, 1, 1 }, { 1, 1, 1, 1, 1 } };
-				ImageMask mask = new ImageMask(values, 5, 5);
+				ImageMask mask = new ImageMask(values, 5, 5, 9);
 				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
 				openImage(_lastImage, "Filter 5x5 Low");
 			}
@@ -345,7 +345,7 @@ public class UI extends JFrame {
 							// TODO Auto-generated Event stub actionPerformed()
 							double[][] values = { { 1, 1 }, { 1, 1 }, { 1, 1 },
 									{ 1, 1 }, { 1, 1 } };
-							ImageMask mask = new ImageMask(values, 5, 2);
+							ImageMask mask = new ImageMask(values, 5, 2, 9);
 							_lastImage = ImageUtils.filterImage(
 									getSelectedImage(), mask);
 							openImage(_lastImage, "Filter 5x2 Low");
@@ -367,7 +367,7 @@ public class UI extends JFrame {
 							// TODO Auto-generated Event stub actionPerformed()
 							double[][] values = { { -1, -1 }, { -1, -1 },
 									{ 4, 4 }, { -1, -1 }, { -1, -1 } };
-							ImageMask mask = new ImageMask(values, 5, 2);
+							ImageMask mask = new ImageMask(values, 5, 2, 9);
 							_lastImage = ImageUtils.filterImage(
 									getSelectedImage(), mask);
 							openImage(_lastImage, "Filter 5x2 High");

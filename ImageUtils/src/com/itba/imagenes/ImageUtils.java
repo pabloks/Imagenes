@@ -350,6 +350,7 @@ public class ImageUtils {
 		double[] rgb = new double[3];
 		double[] newPixel = new double[3];
 		double aux;
+		int factor = mask.getFactor();
 
 		for (int i = 0; i < mask.getWidth(); i++) {
 			for (int j = 0; j < mask.getHeight(); j++) {
@@ -358,9 +359,9 @@ public class ImageUtils {
 						y + j - borderDistanceH, rgb);
 				// apply filter
 				aux = mask.getValue(i, j);
-				newPixel[0] += rgb[0] * aux / count;
-				newPixel[1] += rgb[1] * aux / count;
-				newPixel[2] += rgb[2] * aux / count;
+				newPixel[0] += rgb[0] * aux / factor;
+				newPixel[1] += rgb[1] * aux / factor;
+				newPixel[2] += rgb[2] * aux / factor;
 			}
 		}
 
