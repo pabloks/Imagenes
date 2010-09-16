@@ -92,6 +92,8 @@ public class UI extends JFrame {
 			jContentPane.add(btnActionjButtonRay(), null);
 			jContentPane.add(btnActionjButtonExp(), null);
 			jContentPane.add(btnActionjButtonSalt(), null);
+			jContentPane.add(getBtnActionjButtonMean(), null);
+			
 
 			setRadios(jContentPane);
 
@@ -456,6 +458,20 @@ public class UI extends JFrame {
 					});
 		}
 		return btnActionjButtonSalt;
+	}
+	
+	private JButton getBtnActionjButtonMean() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(301, 250, 140, 16));
+		button.setText("Mean Filter");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				_lastImage = ImageUtils.filterMeanImage(getSelectedImage(), 1);
+				openImage(_lastImage, "Mean Filter");
+			}
+		});
+
+		return button;
 	}
 
 	private void openImage(BufferedImage image, String Title) {

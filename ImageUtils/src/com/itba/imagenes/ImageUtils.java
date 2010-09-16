@@ -1,6 +1,7 @@
 package com.itba.imagenes;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ImageUtils {
@@ -346,7 +347,6 @@ public class ImageUtils {
 			int x, int y) {
 		int borderDistanceW = (int) (mask.getWidth() / 2);
 		int borderDistanceH = (int) (mask.getHeight() / 2);
-		int count = mask.getWidth() * mask.getHeight();
 		double[] rgb = new double[3];
 		double[] newPixel = new double[3];
 		double aux;
@@ -371,4 +371,65 @@ public class ImageUtils {
 
 		return newPixel;
 	}
+	
+	public static BufferedImage filterMeanImage(BufferedImage image, int perimeter) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+
+		int borderDistanceW = perimeter;
+		int borderDistanceH = perimeter;
+
+		// obtain pixels
+		for (int i = borderDistanceW; i < width - borderDistanceW; i++) {
+			for (int j = borderDistanceH; j < height - borderDistanceH; j++) {
+				// for each pixel
+				newImage.getRaster().setPixel(i, j,
+						getMeanValue(image, i, j, perimeter));
+			}
+		}
+
+		return newImage;
+	}
+
+	private static double[] getMeanValue(BufferedImage image, int x, int y, int perimeter) {
+		double[] rgb = new double[3];
+		double[] newPixel = new double[3];
+		double[] values = new double[(2*perimeter+1)*(2*perimeter+1)];
+		Double aux = 0.0;
+		int count = 0;
+
+		for (int i = -perimeter; i <= perimeter; i++) {
+			for (int j = -perimeter; j <= perimeter; j++) {
+				// get pixel
+				image.getRaster().getPixel(x + i ,
+						y + j, rgb);
+				//prom
+				aux = (rgb[0] + rgb[1] + rgb[2])/3;
+				
+				// add to list
+				values[count++] = aux;
+			}
+		}
+		
+		//sort array
+		Arrays.sort(values);
+		
+		//if is even
+		if (values.length % 2 == 0){
+			aux = (values[values.length/2 -1] + values[values.length/2])/2;
+		}else{
+			aux = values[values.length/2];
+		}
+		
+		newPixel[0] = Math.max(aux, 0);
+		newPixel[1] = Math.max(aux, 0);
+		newPixel[2] = Math.max(aux, 0);
+
+		return newPixel;
+	}
+	
+	
 }
