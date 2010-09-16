@@ -1,12 +1,16 @@
 package com.itba.imagenes.tp2;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -43,11 +48,13 @@ public class UI extends JFrame {
     private JButton btnActionjButtonFilt3 = null;
     private JButton btnActionjButtonFilt3l = null;
     private JButton btnActionjButtonFilt5 = null;
-    private JButton btnActionjButtonFilt5l = null;
-    private JLabel jLabel = null;
+    private JButton btnActionjButtonFilt52l = null;
+    private JButton btnActionjButtonFilt52h = null;
     private JPanel jContentPane1 = null;
     private JTextField PathImage = null;
     private BufferedImage _image;
+    private BufferedImage _lastImage;
+    private boolean useOriginal = true;
     String namePathImage = null;
     JFileChooser chooser = new JFileChooser(".");
  
@@ -60,9 +67,6 @@ public class UI extends JFrame {
      */
     private JPanel getJContentPane() throws IOException {
         if (jContentPane == null) {
-//            jLabel = new JLabel();
-//            jLabel.setText("Domain");
-//            jLabel.setBounds(new Rectangle(360, 26, 53, 31));
             lblname = new JLabel();
             lblname.setBounds(new Rectangle(19, 10, 168, 16));
             lblname.setText("Choose an image");
@@ -77,6 +81,9 @@ public class UI extends JFrame {
             jContentPane.add(getBtnActionjButtonFilt3low(), null);
             jContentPane.add(getBtnActionjButtonFilt5high(), null);
             jContentPane.add(getBtnActionjButtonFilt5low(), null);
+            jContentPane.add(getBtnActionjButtonFilt52high(), null);
+            jContentPane.add(getBtnActionjButtonFilt52low(), null);
+            setRadios(jContentPane);
             
 //            jContentPane.add(jLabel, null);
         }
@@ -94,6 +101,44 @@ public class UI extends JFrame {
             jJMenuBar.add(getMenuFile());
         }
         return jJMenuBar;
+    }
+    
+    private BufferedImage getSelectedImage(){
+    	if (useOriginal)
+    		return _image;
+    	
+    	return _lastImage;
+    }
+    
+    private void setRadios(JPanel panel){
+    	// Create the radio buttons.
+        JRadioButton originalButton = new JRadioButton("Original Image");
+        originalButton.setMnemonic('o');
+        originalButton.setActionCommand("original");
+        originalButton.setSelected(true);
+        originalButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				useOriginal = true;
+			}
+		});
+        originalButton.setBounds(20, 60, 200, 15);
+
+        JRadioButton lastButton = new JRadioButton("Last Transform");
+        lastButton.setMnemonic('l');
+        lastButton.setActionCommand("last");
+        lastButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				useOriginal = false;
+			}
+		});
+        lastButton.setBounds(20, 80, 200, 15);
+        
+        ButtonGroup group = new ButtonGroup();
+        group.add(originalButton);
+        group.add(lastButton);
+        
+        panel.add(originalButton, null);
+        panel.add(lastButton, null);
     }
  
     /**
@@ -161,8 +206,8 @@ public class UI extends JFrame {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("actionPerformed() by Browse");
                     // TODO Auto-generated Event stub actionPerformed()
-                    BufferedImage aux = ImageUtils.blackAndWhite(_image, Color.RED.toString());
-                    openImage(aux, "Black And White");
+                    _lastImage = ImageUtils.blackAndWhite(getSelectedImage(), Color.RED.toString());
+                    openImage(_lastImage, "Black And White");
                 }
             });
         }
@@ -178,8 +223,8 @@ public class UI extends JFrame {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("actionPerformed() by Browse");
                     // TODO Auto-generated Event stub actionPerformed()
-                    BufferedImage aux = ImageUtils.getHistogram(_image, Color.RED.toString());
-                    openImage(aux, "Histogram");
+                    _lastImage = ImageUtils.getHistogram(getSelectedImage(), Color.RED.toString());
+                    openImage(_lastImage, "Histogram");
                 }
             });
         }
@@ -201,8 +246,8 @@ public class UI extends JFrame {
                     		{-1, 8, -1}, 
                     		{-1, -1, -1}};
                     ImageMask mask = new ImageMask(values, 3, 3);
-                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
-                    openImage(aux, "Filter 3x3 High");
+                    _lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
+                    openImage(_lastImage, "Filter 3x3 High");
                 }
             });
         }
@@ -223,8 +268,8 @@ public class UI extends JFrame {
                     		{1, 1, 1}, 
                     		{1, 1, 1}};
                     ImageMask mask = new ImageMask(values, 3, 3);
-                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
-                    openImage(aux, "Filter 3x3 Low");
+                    _lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
+                    openImage(_lastImage, "Filter 3x3 Low");
                 }
             });
         }
@@ -247,8 +292,8 @@ public class UI extends JFrame {
                     		{-1, -1, -1, -1 , -1},
                     		{-1, -1, -1, -1, -1}};
                     ImageMask mask = new ImageMask(values, 5, 5);
-                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
-                    openImage(aux, "Filter 5x5 High");
+                    _lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
+                    openImage(_lastImage, "Filter 5x5 High");
                 }
             });
         }
@@ -256,11 +301,10 @@ public class UI extends JFrame {
     }
     
     private JButton getBtnActionjButtonFilt5low() {
-        if (btnActionjButtonFilt5l == null) {
-        	btnActionjButtonFilt5l = new JButton();
-        	btnActionjButtonFilt5l.setBounds(new Rectangle(301, 110, 140, 16));
-        	btnActionjButtonFilt5l.setText("Filter 5x5 Low");
-        	btnActionjButtonFilt5l.addActionListener(new java.awt.event.ActionListener() {
+        	JButton button = new JButton();
+        	button.setBounds(new Rectangle(301, 110, 140, 16));
+        	button.setText("Filter 5x5 Low");
+        	button.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("actionPerformed() by Browse");
                     // TODO Auto-generated Event stub actionPerformed()
@@ -271,12 +315,60 @@ public class UI extends JFrame {
                     		{1, 1, 1, 1 , 1},
                     		{1, 1, 1, 1 , 1}};
                     ImageMask mask = new ImageMask(values, 5, 5);
-                    BufferedImage aux = ImageUtils.filterImage(_image, mask);
-                    openImage(aux, "Filter 5x5 Low");
+                    _lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
+                    openImage(_lastImage, "Filter 5x5 Low");
+                }
+            });
+        	
+        return button;
+    }
+    
+    private JButton getBtnActionjButtonFilt52low() {
+        if (btnActionjButtonFilt52l == null) {
+        	btnActionjButtonFilt52l = new JButton();
+        	btnActionjButtonFilt52l.setBounds(new Rectangle(301, 130, 140, 16));
+        	btnActionjButtonFilt52l.setText("Filter 5x2 Low");
+        	btnActionjButtonFilt52l.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    double[][] values = {
+                    		{1, 1},
+                    		{1, 1},
+                    		{1, 1},
+                    		{1, 1},
+                    		{1, 1}};
+                    ImageMask mask = new ImageMask(values, 5, 2);
+                    _lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
+                    openImage(_lastImage, "Filter 5x2 Low");
                 }
             });
         }
-        return btnActionjButtonFilt5l;
+        return btnActionjButtonFilt52l;
+    }
+    
+    private JButton getBtnActionjButtonFilt52high() {
+        if (btnActionjButtonFilt52h == null) {
+        	btnActionjButtonFilt52h = new JButton();
+        	btnActionjButtonFilt52h.setBounds(new Rectangle(301, 150, 140, 16));
+        	btnActionjButtonFilt52h.setText("Filter 5x2 High");
+        	btnActionjButtonFilt52h.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    System.out.println("actionPerformed() by Browse");
+                    // TODO Auto-generated Event stub actionPerformed()
+                    double[][] values = {
+                    		{-1, -1},
+                    		{-1, -1},
+                    		{4, 4},
+                    		{-1, -1},
+                    		{-1, -1}};
+                    ImageMask mask = new ImageMask(values, 5, 2);
+                    _lastImage = ImageUtils.filterImage(getSelectedImage(), mask);
+                    openImage(_lastImage, "Filter 5x2 High");
+                }
+            });
+        }
+        return btnActionjButtonFilt52h;
     }
     
     private void openImage(BufferedImage image, String Title){
@@ -305,8 +397,8 @@ public class UI extends JFrame {
     private JButton getBtnActionjButton1() {
         if (btnActionjButton1 == null) {
             btnActionjButton1 = new JButton();
-            btnActionjButton1.setBounds(new Rectangle(201, 10, 98, 16));
-            btnActionjButton1.setText("Browse");
+            btnActionjButton1.setBounds(new Rectangle(140, 10, 98, 16));
+            btnActionjButton1.setText("Set Image");
             btnActionjButton1.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("actionPerformed() by Browse");
@@ -326,6 +418,7 @@ public class UI extends JFrame {
             JPanel panel = null;
             try {
             	_image = ImageIO.read(new File(namePathImage));
+            	_lastImage = _image;
                 panel = getJContentPane1();
             } catch(IOException e) {
                 System.out.println("io error: " + e.getMessage());
