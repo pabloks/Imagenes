@@ -75,7 +75,7 @@ public class UI extends JFrame {
 	private JPanel getJContentPane() throws IOException {
 		if (jContentPane == null) {
 			lblname = new JLabel();
-			lblname.setBounds(new Rectangle(19, 10, 168, 16));
+			lblname.setBounds(new Rectangle(20, 10, 168, 16));
 			lblname.setText("Choose an image");
 			jContentPane = new JPanel();
 
@@ -101,12 +101,27 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonSobel(), null);
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
+			
+			jContentPane.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
+			jContentPane.add(getLabel("Noise", new Rectangle(200, 120, 50, 20)));
+			jContentPane.add(getLabel("Border detector", new Rectangle(380, 120, 200, 20)));
+			
+			jContentPane.add(getLabel("Utilities", new Rectangle(380, 220, 200, 20)));
+			
+			jContentPane.add(getLabel("Apply to", new Rectangle(20, 50, 100, 20)));
 
 			setRadios(jContentPane);
 
 			// jContentPane.add(jLabel, null);
 		}
 		return jContentPane;
+	}
+	
+	private JLabel getLabel(String desc, Rectangle pos){
+		JLabel label = new JLabel(desc);
+		label.setBounds(pos);
+		
+		return label;
 	}
 
 	/**
@@ -140,7 +155,7 @@ public class UI extends JFrame {
 				useOriginal = true;
 			}
 		});
-		originalButton.setBounds(20, 60, 200, 15);
+		originalButton.setBounds(80, 54, 200, 15);
 
 		JRadioButton lastButton = new JRadioButton("Last Transform");
 		lastButton.setMnemonic('l');
@@ -150,7 +165,7 @@ public class UI extends JFrame {
 				useOriginal = false;
 			}
 		});
-		lastButton.setBounds(20, 80, 200, 15);
+		lastButton.setBounds(80, 74, 200, 15);
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(originalButton);
@@ -186,8 +201,6 @@ public class UI extends JFrame {
 			menuItemOpen.setText("Open");
 			menuItemOpen.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					System.out.println("actionPerformed() by Open");
-					// TODO Auto-generated Event stub actionPerformed()
 					openDialog();
 				}
 			});
@@ -207,8 +220,6 @@ public class UI extends JFrame {
 			menuItemClose
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed()");
-							// TODO Auto-generated Event stub actionPerformed()
 							System.exit(0);
 						}
 					});
@@ -219,13 +230,11 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonBW() {
 		if (btnActionjButtonBW == null) {
 			btnActionjButtonBW = new JButton();
-			btnActionjButtonBW.setBounds(new Rectangle(301, 10, 140, 16));
+			btnActionjButtonBW.setBounds(new Rectangle(380, 240, 140, 20));
 			btnActionjButtonBW.setText("Black And White");
 			btnActionjButtonBW
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
-							// TODO Auto-generated Event stub actionPerformed()
 							_lastImage = ImageUtils.blackAndWhite(
 									getSelectedImage(), Color.RED.toString());
 							openImage(_lastImage, "Black And White");
@@ -238,7 +247,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonHist() {
 		if (btnActionjButtonHist == null) {
 			btnActionjButtonHist = new JButton();
-			btnActionjButtonHist.setBounds(new Rectangle(301, 30, 140, 16));
+			btnActionjButtonHist.setBounds(new Rectangle(380, 260, 140, 20));
 			btnActionjButtonHist.setText("Histogram");
 			btnActionjButtonHist
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -257,8 +266,8 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonFilt3high() {
 		if (btnActionjButtonFilt3 == null) {
 			btnActionjButtonFilt3 = new JButton();
-			btnActionjButtonFilt3.setBounds(new Rectangle(301, 50, 140, 16));
-			btnActionjButtonFilt3.setText("Filter 3x3 High");
+			btnActionjButtonFilt3.setBounds(new Rectangle(20, 140, 140, 16));
+			btnActionjButtonFilt3.setText("3x3 High");
 			btnActionjButtonFilt3
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -279,8 +288,8 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonFilt3low() {
 		if (btnActionjButtonFilt3l == null) {
 			btnActionjButtonFilt3l = new JButton();
-			btnActionjButtonFilt3l.setBounds(new Rectangle(301, 70, 140, 16));
-			btnActionjButtonFilt3l.setText("Filter 3x3 Low");
+			btnActionjButtonFilt3l.setBounds(new Rectangle(20, 160, 140, 16));
+			btnActionjButtonFilt3l.setText("3x3 Low");
 			btnActionjButtonFilt3l
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -301,8 +310,8 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonFilt5high() {
 		if (btnActionjButtonFilt5 == null) {
 			btnActionjButtonFilt5 = new JButton();
-			btnActionjButtonFilt5.setBounds(new Rectangle(301, 90, 140, 16));
-			btnActionjButtonFilt5.setText("Filter 5x5 High");
+			btnActionjButtonFilt5.setBounds(new Rectangle(20, 180, 140, 16));
+			btnActionjButtonFilt5.setText("5x5 High");
 			btnActionjButtonFilt5
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -325,8 +334,8 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonFilt5low() {
 		JButton button = new JButton();
-		button.setBounds(new Rectangle(301, 110, 140, 16));
-		button.setText("Filter 5x5 Low");
+		button.setBounds(new Rectangle(20, 200, 140, 16));
+		button.setText("5x5 Low");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				System.out.println("actionPerformed() by Browse");
@@ -345,8 +354,8 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonFilt52low() {
 		if (btnActionjButtonFilt52l == null) {
 			btnActionjButtonFilt52l = new JButton();
-			btnActionjButtonFilt52l.setBounds(new Rectangle(301, 130, 140, 16));
-			btnActionjButtonFilt52l.setText("Filter 5x2 Low");
+			btnActionjButtonFilt52l.setBounds(new Rectangle(20, 220, 140, 16));
+			btnActionjButtonFilt52l.setText("5x2 Low");
 			btnActionjButtonFilt52l
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -367,8 +376,8 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonFilt52high() {
 		if (btnActionjButtonFilt52h == null) {
 			btnActionjButtonFilt52h = new JButton();
-			btnActionjButtonFilt52h.setBounds(new Rectangle(301, 150, 140, 16));
-			btnActionjButtonFilt52h.setText("Filter 5x2 High");
+			btnActionjButtonFilt52h.setBounds(new Rectangle(20, 240, 140, 16));
+			btnActionjButtonFilt52h.setText("5x2 High");
 			btnActionjButtonFilt52h
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -387,8 +396,8 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonGauss() {
 		if (btnActionjButtonGauss == null) {
 			btnActionjButtonGauss = new JButton();
-			btnActionjButtonGauss.setBounds(new Rectangle(301, 170, 140, 16));
-			btnActionjButtonGauss.setText("Noise Gauss");
+			btnActionjButtonGauss.setBounds(new Rectangle(200, 140, 140, 16));
+			btnActionjButtonGauss.setText("Gauss");
 			btnActionjButtonGauss
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -441,8 +450,8 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonRay() {
 		if (btnActionjButtonRay == null) {
 			btnActionjButtonRay = new JButton();
-			btnActionjButtonRay.setBounds(new Rectangle(301, 190, 140, 16));
-			btnActionjButtonRay.setText("Noise Ray");
+			btnActionjButtonRay.setBounds(new Rectangle(200, 160, 140, 16));
+			btnActionjButtonRay.setText("Ray");
 			btnActionjButtonRay
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -494,8 +503,8 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonExp() {
 		if (btnActionjButtonExp == null) {
 			btnActionjButtonExp = new JButton();
-			btnActionjButtonExp.setBounds(new Rectangle(301, 210, 140, 16));
-			btnActionjButtonExp.setText("Noise Exp");
+			btnActionjButtonExp.setBounds(new Rectangle(200, 180, 140, 16));
+			btnActionjButtonExp.setText("Exp");
 			btnActionjButtonExp
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -547,8 +556,8 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonSalt() {
 		if (btnActionjButtonSalt == null) {
 			btnActionjButtonSalt = new JButton();
-			btnActionjButtonSalt.setBounds(new Rectangle(301, 230, 140, 16));
-			btnActionjButtonSalt.setText("Noise Salt & Pepper");
+			btnActionjButtonSalt.setBounds(new Rectangle(200, 200, 140, 16));
+			btnActionjButtonSalt.setText("Salt & Pepper");
 			btnActionjButtonSalt
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -600,7 +609,7 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonMean() {
 		JButton button = new JButton();
-		button.setBounds(new Rectangle(301, 250, 140, 16));
+		button.setBounds(new Rectangle(20, 270, 140, 16));
 		button.setText("Mean Filter");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -614,8 +623,8 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonRoberts() {
 		JButton button = new JButton();
-		button.setBounds(new Rectangle(301, 270, 140, 16));
-		button.setText("Border detector (Roberts)");
+		button.setBounds(new Rectangle(380, 140, 140, 16));
+		button.setText("Roberts");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				double[][] values1 = { { 1, 0 }, { 0, -1 } };
@@ -645,8 +654,8 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonPrewitt() {
 		JButton button = new JButton();
-		button.setBounds(new Rectangle(301, 290, 140, 16));
-		button.setText("Border detector (Prewitt)");
+		button.setBounds(new Rectangle(380, 160, 140, 16));
+		button.setText("Prewitt");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				double[][] values1 = { { -1, -1, -1 }, { 0, 0, 0 }, { 1, 1, 1 } };
@@ -675,8 +684,8 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonSobel() {
 		JButton button = new JButton();
-		button.setBounds(new Rectangle(301, 310, 140, 16));
-		button.setText("Border detector (Sobel)");
+		button.setBounds(new Rectangle(380, 180, 140, 16));
+		button.setText("Sobel");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				double[][] values1 = { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
@@ -705,7 +714,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonIso() {
 		if (btnActionjButtonIso == null) {
 			btnActionjButtonIso = new JButton();
-			btnActionjButtonIso.setBounds(new Rectangle(301, 330, 140, 16));
+			btnActionjButtonIso.setBounds(new Rectangle(20, 290, 140, 16));
 			btnActionjButtonIso.setText("Isotropic");
 			btnActionjButtonIso
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -757,7 +766,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonAniso() {
 		if (btnActionjButtonAniso == null) {
 			btnActionjButtonAniso = new JButton();
-			btnActionjButtonAniso.setBounds(new Rectangle(301, 350, 140, 16));
+			btnActionjButtonAniso.setBounds(new Rectangle(20, 310, 140, 16));
 			btnActionjButtonAniso.setText("Anisotropic");
 			btnActionjButtonAniso
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -841,7 +850,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButton1() {
 		if (btnActionjButton1 == null) {
 			btnActionjButton1 = new JButton();
-			btnActionjButton1.setBounds(new Rectangle(20, 30, 98, 16));
+			btnActionjButton1.setBounds(new Rectangle(140, 10, 98, 16));
 			btnActionjButton1.setText("Browse");
 			btnActionjButton1
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -977,7 +986,7 @@ public class UI extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		this.setSize(465, 430);
+		this.setSize(600, 430);
 		this.setResizable(false);
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
