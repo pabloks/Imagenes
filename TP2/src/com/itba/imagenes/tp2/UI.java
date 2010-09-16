@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -55,7 +56,6 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonSalt = null;
 	private JButton btnActionjButtonIso = null;
 	private JButton btnActionjButtonAniso = null;
-	private JTextField txtParams = null;
 
 	private JPanel jContentPane1 = null;
 	private JTextField PathImage = null;
@@ -101,8 +101,6 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonSobel(), null);
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
-
-			jContentPane.add(getTxtParams(), null);
 
 			setRadios(jContentPane);
 
@@ -394,15 +392,45 @@ public class UI extends JFrame {
 			btnActionjButtonGauss
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
 
-							String[] params = txtParams.getText().split(",");
-							_lastImage = RandomGenerator.noiseGauss(
-									getSelectedImage(),
-									Double.parseDouble(params[0]),
-									Double.parseDouble(params[1]));
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
 
-							openImage(_lastImage, "Noise Gauss");
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: mean,stdev",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 2)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = RandomGenerator.noiseGauss(
+										getSelectedImage(),
+										Double.parseDouble(params[0]),
+										Double.parseDouble(params[1]));
+
+								openImage(_lastImage, "Noise Gauss");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					});
 			btnActionjButtonGauss.setToolTipText("mean,stdev");
@@ -418,14 +446,44 @@ public class UI extends JFrame {
 			btnActionjButtonRay
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
 
-							String[] params = txtParams.getText().split(",");
-							_lastImage = RandomGenerator.noiseRayleigh(
-									getSelectedImage(),
-									Double.parseDouble(params[0]));
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
 
-							openImage(_lastImage, "Noise Ray");
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: sigma",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 1)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = RandomGenerator.noiseRayleigh(
+										getSelectedImage(),
+										Double.parseDouble(params[0]));
+
+								openImage(_lastImage, "Noise Ray");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					});
 			btnActionjButtonRay.setToolTipText("sigma");
@@ -441,14 +499,44 @@ public class UI extends JFrame {
 			btnActionjButtonExp
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
 
-							String[] params = txtParams.getText().split(",");
-							_lastImage = RandomGenerator.noiseExp(
-									getSelectedImage(),
-									Double.parseDouble(params[0]));
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
 
-							openImage(_lastImage, "Noise Exp");
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: lambda",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 1)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = RandomGenerator.noiseExp(
+										getSelectedImage(),
+										Double.parseDouble(params[0]));
+
+								openImage(_lastImage, "Noise Exp");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					});
 			btnActionjButtonExp.setToolTipText("lambda");
@@ -464,16 +552,45 @@ public class UI extends JFrame {
 			btnActionjButtonSalt
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
-							// TODO Auto-generated Event stub actionPerformed()
 
-							String[] params = txtParams.getText().split(",");
-							_lastImage = RandomGenerator.noiseSaltPepper(
-									getSelectedImage(),
-									Double.parseDouble(params[0]),
-									Double.parseDouble(params[1]));
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
 
-							openImage(_lastImage, "Noise Salt & Pepper");
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: p0,p1",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 2)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = RandomGenerator.noiseSaltPepper(
+										getSelectedImage(),
+										Double.parseDouble(params[0]),
+										Double.parseDouble(params[1]));
+
+								openImage(_lastImage, "Noise Salt & Pepper");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					});
 			btnActionjButtonSalt.setToolTipText("p0,p1");
@@ -593,14 +710,43 @@ public class UI extends JFrame {
 			btnActionjButtonIso
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
 
-							String[] params = txtParams.getText().split(",");
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
 
-							_lastImage = Disfunction.isotropic(
-									getSelectedImage(),
-									Float.parseFloat(params[0]));
-							openImage(_lastImage, "Isotropic");
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: t",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 1)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = Disfunction.isotropic(
+										getSelectedImage(),
+										Float.parseFloat(params[0]));
+								openImage(_lastImage, "Isotropic");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					});
 			btnActionjButtonIso.setToolTipText("t");
@@ -616,30 +762,56 @@ public class UI extends JFrame {
 			btnActionjButtonAniso
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
 
-							String[] params = txtParams.getText().split(",");
-							_lastImage = Disfunction.anisotropicDifusionFilter(
-									getSelectedImage(),
-									Float.parseFloat(params[0]),
-									Float.parseFloat(params[1]),
-									Float.parseFloat(params[2]),
-									Float.parseFloat(params[3]),
-									Float.parseFloat(params[4]));
-							openImage(_lastImage, "Anisotropic");
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+
+							String paramsResult = JOptionPane
+									.showInputDialog(
+											null,
+											"Introduzca parametros: lambda,cn,cs,ce,cw",
+											"Parametros",
+											JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 5)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = Disfunction
+										.anisotropicDifusionFilter(
+												getSelectedImage(),
+												Float.parseFloat(params[0]),
+												Float.parseFloat(params[1]),
+												Float.parseFloat(params[2]),
+												Float.parseFloat(params[3]),
+												Float.parseFloat(params[4]));
+								openImage(_lastImage, "Anisotropic");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
 						}
 					});
 			btnActionjButtonAniso.setToolTipText("lambda, cn, cs, ce, cw");
 		}
 		return btnActionjButtonAniso;
-	}
-
-	private JTextField getTxtParams() {
-		if (txtParams == null) {
-			txtParams = new JTextField();
-			txtParams.setBounds(new Rectangle(301, 390, 140, 16));
-		}
-		return txtParams;
 	}
 
 	private void openImage(BufferedImage image, String Title) {
@@ -657,6 +829,7 @@ public class UI extends JFrame {
 		d.getContentPane().add(panel);
 		d.pack();
 		d.setLocationRelativeTo(this);
+		d.setLocation(0, 200);
 		d.setVisible(true);
 	}
 
@@ -668,7 +841,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButton1() {
 		if (btnActionjButton1 == null) {
 			btnActionjButton1 = new JButton();
-			btnActionjButton1.setBounds(new Rectangle(201, 10, 98, 16));
+			btnActionjButton1.setBounds(new Rectangle(20, 30, 98, 16));
 			btnActionjButton1.setText("Browse");
 			btnActionjButton1
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -701,6 +874,7 @@ public class UI extends JFrame {
 			d.getContentPane().add(panel);
 			d.pack();
 			d.setLocationRelativeTo(this);
+			d.setLocation(470, 0);
 			d.setVisible(true);
 		}
 	}
@@ -803,9 +977,10 @@ public class UI extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		this.setSize(600, 500);
+		this.setSize(465, 430);
+		this.setResizable(false);
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
-		this.setTitle("Imagenes == TP 2 ==");
+		this.setTitle("ITBA Imagenes TP2");
 	}
 }
