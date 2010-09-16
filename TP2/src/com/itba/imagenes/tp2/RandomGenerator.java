@@ -26,26 +26,31 @@ public class RandomGenerator {
 
 		// output = noiseGauss(inputImage1, 0, 0.05);
 		// output = noiseRayleigh(inputImage1, 0.5);
-		output = noiseExp(inputImage1, 0.05);
+		// output = noiseExp(inputImage1, 0.05);
+		output = noiseSaltPepper(inputImage1, 0.05, 0.95);
 
 		params.saveImage(output);
 	}
 
-	public static BufferedImage noiseSaltPepper(BufferedImage img,
-			double intensity) {
+	public static BufferedImage noiseSaltPepper(BufferedImage img, double p0,
+			double p1) {
 		BufferedImage noised = new BufferedImage(img.getWidth(),
 				img.getHeight(), BufferedImage.TYPE_INT_RGB);
 
 		double[] rgbPixels = new double[3];
 		double newPixel;
+		double newRand;
+
 		for (int i = 0; i < img.getWidth(); i++) {
 			for (int j = 0; j < img.getHeight(); j++) {
 				img.getRaster().getPixel(i, j, rgbPixels);
-				// Saco el gris
-				newPixel = (rgbPixels[0] + rgbPixels[1] + rgbPixels[2]) / 3;
-				newPixel *= nextRayleigh(sigma);
 
-				if (newPixel < 0 || newPixel > 255)
+				newPixel = (rgbPixels[0] + rgbPixels[1] + rgbPixels[2]) / 3;
+
+				newRand = rand.nextDouble();
+				if (newRand <= p0)
+					newPixel = 0;
+				else if (newRand >= p1)
 					newPixel = 255;
 
 				rgbPixels[0] = newPixel;
