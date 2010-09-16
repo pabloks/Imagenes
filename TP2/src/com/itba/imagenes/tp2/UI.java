@@ -93,7 +93,9 @@ public class UI extends JFrame {
 			jContentPane.add(btnActionjButtonExp(), null);
 			jContentPane.add(btnActionjButtonSalt(), null);
 			jContentPane.add(getBtnActionjButtonMean(), null);
-			
+			jContentPane.add(getBtnActionjButtonRoberts(), null);
+			jContentPane.add(getBtnActionjButtonPrewitt(), null);
+			jContentPane.add(getBtnActionjButtonSobel(), null);
 
 			setRadios(jContentPane);
 
@@ -365,8 +367,6 @@ public class UI extends JFrame {
 			btnActionjButtonFilt52h
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
-							// TODO Auto-generated Event stub actionPerformed()
 							double[][] values = { { -1, -1 }, { -1, -1 },
 									{ 4, 4 }, { -1, -1 }, { -1, -1 } };
 							ImageMask mask = new ImageMask(values, 5, 2, 9);
@@ -473,6 +473,110 @@ public class UI extends JFrame {
 
 		return button;
 	}
+	
+	private JButton getBtnActionjButtonRoberts() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(301, 270, 140, 16));
+		button.setText("Border detector (Roberts)");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { 
+						{ 1, 0 }, 
+						{ 0, -1 }};
+				double[][] values2 = { 
+						{ 0, 1 }, 
+						{ -1, 0 }};
+				ImageMask mask1 = new ImageMask(values1, 2, 2, 1);
+				ImageMask mask2 = new ImageMask(values2, 2, 2, 1);
+				
+				BufferedImage img1 = ImageUtils.filterImage(
+						getSelectedImage(), mask1);
+				
+				BufferedImage img2 = ImageUtils.filterImage(
+						getSelectedImage(), mask2);
+				
+				try {
+					_lastImage = ImageUtils.MathOperatorFunction(img1, img2, "suma", 0.0);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				openImage(_lastImage, "Border detector (Roberts)");
+			}
+		});
+
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonPrewitt() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(301, 290, 140, 16));
+		button.setText("Border detector (Prewitt)");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { 
+						{ -1, -1, -1 }, 
+						{ 0, 0, 0 },
+						{ 1, 1, 1 }};
+				double[][] values2 = { 
+						{ -1, 0, 1 }, 
+						{ -1, 0, 1 },
+						{ -1, 0, 1 }};
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+				ImageMask mask2 = new ImageMask(values2, 3, 3, 1);
+				
+				BufferedImage img1 = ImageUtils.filterImage(
+						getSelectedImage(), mask1);
+				
+				BufferedImage img2 = ImageUtils.filterImage(
+						getSelectedImage(), mask2);
+				
+				try {
+					_lastImage = ImageUtils.MathOperatorFunction(img1, img2, "suma", 0.0);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				openImage(_lastImage, "Border detector (Prewitt)");
+			}
+		});
+
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonSobel() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(301, 310, 140, 16));
+		button.setText("Border detector (Sobel)");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { 
+						{ -1, -2, -1 }, 
+						{ 0, 0, 0 },
+						{ 1, 2, 1 }};
+				double[][] values2 = { 
+						{ -1, 0, 1 }, 
+						{ -2, 0, 2 },
+						{ -1, 0, 1 }};
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+				ImageMask mask2 = new ImageMask(values2, 3, 3, 1);
+				
+				BufferedImage img1 = ImageUtils.filterImage(
+						getSelectedImage(), mask1);
+				
+				BufferedImage img2 = ImageUtils.filterImage(
+						getSelectedImage(), mask2);
+				
+				try {
+					_lastImage = ImageUtils.MathOperatorFunction(img1, img2, "suma", 0.0);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				openImage(_lastImage, "Border detector (Sobel)");
+			}
+		});
+
+		return button;
+	}
 
 	private void openImage(BufferedImage image, String Title) {
 		// System.out.println("namePathImage = " + namePathImage);
@@ -505,8 +609,6 @@ public class UI extends JFrame {
 			btnActionjButton1
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							System.out.println("actionPerformed() by Browse");
-							// TODO Auto-generated Event stub actionPerformed()
 							openDialog();
 						}
 					});
@@ -637,9 +739,9 @@ public class UI extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		this.setSize(471, 319);
+		this.setSize(600, 500);
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
-		this.setTitle("Image Annotation Tool");
+		this.setTitle("Imagenes == TP 2 ==");
 	}
 }
