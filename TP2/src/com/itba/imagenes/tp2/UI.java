@@ -101,14 +101,19 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonSobel(), null);
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
-			
-			jContentPane.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
-			jContentPane.add(getLabel("Noise", new Rectangle(200, 120, 50, 20)));
-			jContentPane.add(getLabel("Border detector", new Rectangle(380, 120, 200, 20)));
-			
-			jContentPane.add(getLabel("Utilities", new Rectangle(380, 220, 200, 20)));
-			
-			jContentPane.add(getLabel("Apply to", new Rectangle(20, 50, 100, 20)));
+
+			jContentPane
+					.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
+			jContentPane
+					.add(getLabel("Noise", new Rectangle(200, 120, 50, 20)));
+			jContentPane.add(getLabel("Border detector", new Rectangle(380,
+					120, 200, 20)));
+
+			jContentPane.add(getLabel("Utilities", new Rectangle(380, 220, 200,
+					20)));
+
+			jContentPane.add(getLabel("Apply to",
+					new Rectangle(20, 50, 100, 20)));
 
 			setRadios(jContentPane);
 
@@ -116,11 +121,11 @@ public class UI extends JFrame {
 		}
 		return jContentPane;
 	}
-	
-	private JLabel getLabel(String desc, Rectangle pos){
+
+	private JLabel getLabel(String desc, Rectangle pos) {
 		JLabel label = new JLabel(desc);
 		label.setBounds(pos);
-		
+
 		return label;
 	}
 
@@ -782,12 +787,10 @@ public class UI extends JFrame {
 								return;
 							}
 
-							String paramsResult = JOptionPane
-									.showInputDialog(
-											null,
-											"Introduzca parametros: lambda,cn,cs,ce,cw",
-											"Parametros",
-											JOptionPane.OK_CANCEL_OPTION);
+							String paramsResult = JOptionPane.showInputDialog(
+									null,
+									"Introduzca parametros: lambda,iterations",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
 
 							if (paramsResult == null)
 								return;
@@ -795,7 +798,7 @@ public class UI extends JFrame {
 							try {
 								String[] params = paramsResult.split(",");
 
-								if (params.length != 5)
+								if (params.length != 2)
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
@@ -803,10 +806,7 @@ public class UI extends JFrame {
 										.anisotropicDifusionFilter(
 												getSelectedImage(),
 												Float.parseFloat(params[0]),
-												Float.parseFloat(params[1]),
-												Float.parseFloat(params[2]),
-												Float.parseFloat(params[3]),
-												Float.parseFloat(params[4]));
+												Integer.parseInt(params[1]));
 								openImage(_lastImage, "Anisotropic");
 							} catch (Exception ex) {
 								JOptionPane
