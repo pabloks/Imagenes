@@ -1,5 +1,6 @@
 package com.itba.imagenes;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
@@ -431,4 +432,41 @@ public class ImageUtils {
 		return newPixel;
 	}
 
+	public static BufferedImage Hough(BufferedImage image, double deltaError){
+		int width = image.getWidth();
+		int height = image.getHeight();
+		double[] rgb = new double[3];
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		
+		double thetas[] = {-Math.PI/2, 0, Math.PI/2 , Math.PI};
+		double ro[] = {width/8, width/4, width/2, width};
+		
+		int[][] matrix = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
+		
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				image.getRaster().getPixel(i,j, rgb);
+
+				if ((rgb[0] == 255) || (rgb[1] == 255) || (rgb[2] == 255))
+					for(int k=0; k < thetas.length; k++)
+						for(int l=0; l < ro.length; l++)
+							if (ro[l] - i*Math.cos(thetas[k]) - j*Math.sin(thetas[k]) < deltaError)
+								matrix[k][l] ++;
+			}
+		}
+		
+		Graphics2D g = newImage.createGraphics();
+		
+		for (int i = 0; i < thetas.length; i++) {
+			for (int j = 0; j < ro.length; j++) {
+				if(matrix[i][j] > 0){
+					g.drawLine((int)(ro[j]*Math.sin(thetas[i])), 0, 0, (int)(ro[j]*Math.cos(thetas[i])));
+				}
+			}
+		}
+		
+		return g.getDeviceConfiguration().createCompatibleImage(width, height);
+	}
 }

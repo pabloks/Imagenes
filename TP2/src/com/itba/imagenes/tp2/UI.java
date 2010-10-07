@@ -101,6 +101,8 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonSobel(), null);
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
+			jContentPane.add(getBtnActionjButtonUmb(), null);
+			jContentPane.add(getBtnActionjButtonHough(), null);
 
 			jContentPane
 					.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
@@ -235,7 +237,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonBW() {
 		if (btnActionjButtonBW == null) {
 			btnActionjButtonBW = new JButton();
-			btnActionjButtonBW.setBounds(new Rectangle(380, 240, 140, 20));
+			btnActionjButtonBW.setBounds(new Rectangle(380, 240, 140, 16));
 			btnActionjButtonBW.setText("Black And White");
 			btnActionjButtonBW
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -252,7 +254,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonHist() {
 		if (btnActionjButtonHist == null) {
 			btnActionjButtonHist = new JButton();
-			btnActionjButtonHist.setBounds(new Rectangle(380, 260, 140, 20));
+			btnActionjButtonHist.setBounds(new Rectangle(380, 260, 140, 16));
 			btnActionjButtonHist.setText("Histogram");
 			btnActionjButtonHist
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -266,6 +268,104 @@ public class UI extends JFrame {
 					});
 		}
 		return btnActionjButtonHist;
+	}
+	
+	private JButton getBtnActionjButtonUmb() {
+		JButton btnActionjButtonUmb = new JButton();
+		btnActionjButtonUmb.setBounds(new Rectangle(380, 280, 140, 16));
+		btnActionjButtonUmb.setText("Umbral");
+		btnActionjButtonUmb
+			.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+
+				if (getSelectedImage() == null) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+									"Error: no hay imagen de entrada",
+									JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				String paramsResult = JOptionPane.showInputDialog(
+						null, "Introduzca parametros: scalar",
+						"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+				if (paramsResult == null)
+					return;
+
+				try {
+					String[] params = paramsResult.split(",");
+
+					if (params.length != 1)
+						throw new Exception(
+								"Cantidad de parametros incorrecta");
+
+					_lastImage = ImageUtils.UmbralFunction(getSelectedImage(), Double.parseDouble(params[0]));
+
+					openImage(_lastImage, "Umbral");
+				} catch (Exception ex) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Parametros incorrectos, respete el formato pedido!",
+									"Error: parametros incorrectos",
+									JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		return btnActionjButtonUmb;
+	}
+	
+	private JButton getBtnActionjButtonHough() {
+		JButton btnActionjButtonHough = new JButton();
+		btnActionjButtonHough.setBounds(new Rectangle(380, 300, 140, 16));
+		btnActionjButtonHough.setText("Hough");
+		btnActionjButtonHough
+			.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+
+				if (getSelectedImage() == null) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+									"Error: no hay imagen de entrada",
+									JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				String paramsResult = JOptionPane.showInputDialog(
+						null, "Introduzca parametros: delta",
+						"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+				if (paramsResult == null)
+					return;
+
+				try {
+					String[] params = paramsResult.split(",");
+
+					if (params.length != 1)
+						throw new Exception(
+								"Cantidad de parametros incorrecta");
+
+					_lastImage = ImageUtils.Hough(getSelectedImage(), Double.parseDouble(params[0]));
+
+					openImage(_lastImage, "Hough");
+				} catch (Exception ex) {
+					JOptionPane
+							.showMessageDialog(
+									null,
+									"Parametros incorrectos, respete el formato pedido!",
+									"Error: parametros incorrectos",
+									JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		return btnActionjButtonHough;
 	}
 
 	private JButton getBtnActionjButtonFilt3high() {
