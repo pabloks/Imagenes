@@ -736,7 +736,7 @@ public class UI extends JFrame {
 							}
 
 							String paramsResult = JOptionPane.showInputDialog(
-									null, "Introduzca parametros: t",
+									null, "Introduzca parametros: lambda,iteraciones",
 									"Parametros", JOptionPane.OK_CANCEL_OPTION);
 
 							if (paramsResult == null)
@@ -745,13 +745,14 @@ public class UI extends JFrame {
 							try {
 								String[] params = paramsResult.split(",");
 
-								if (params.length != 1)
+								if (params.length != 2)
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = Disfunction.isotropic(
+								_lastImage = Disfunction.isotropicDifusionFilter(
 										getSelectedImage(),
-										Float.parseFloat(params[0]));
+										Float.parseFloat(params[0]),
+										Integer.parseInt(params[1]));
 								openImage(_lastImage, "Isotropic");
 							} catch (Exception ex) {
 								JOptionPane
@@ -789,7 +790,7 @@ public class UI extends JFrame {
 
 							String paramsResult = JOptionPane.showInputDialog(
 									null,
-									"Introduzca parametros: lambda,iterations",
+									"Introduzca parametros: lambda,iterations,sigma",
 									"Parametros", JOptionPane.OK_CANCEL_OPTION);
 
 							if (paramsResult == null)
@@ -798,7 +799,7 @@ public class UI extends JFrame {
 							try {
 								String[] params = paramsResult.split(",");
 
-								if (params.length != 2)
+								if (params.length != 3)
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
@@ -806,7 +807,8 @@ public class UI extends JFrame {
 										.anisotropicDifusionFilter(
 												getSelectedImage(),
 												Float.parseFloat(params[0]),
-												Integer.parseInt(params[1]));
+												Integer.parseInt(params[1]),
+												Float.parseFloat(params[2]));
 								openImage(_lastImage, "Anisotropic");
 							} catch (Exception ex) {
 								JOptionPane

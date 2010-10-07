@@ -22,27 +22,22 @@ public class Disfunction {
 		BufferedImage inputImage1 = params.loadNextImage();
 		BufferedImage output = null;
 
-		output = isotropicDifusionFilter(inputImage1, (float) 0.1);
+//		output = isotropicDifusionFilter(inputImage1, (float) 0.1);
 
 		params.saveImage(output);
 	}
 
-	public static BufferedImage isotropic(BufferedImage img, float t) {
-
-		GaussianFilter gf = new GaussianFilter(t);
-		return gf.filter(img, null);
-	}
-
-	public static BufferedImage anisotropicDifusionFilter(BufferedImage img,
+	public static BufferedImage isotropicDifusionFilter(BufferedImage img,
 			float lambda, int iterations) {
 
-		BufferedImage newImage = new BufferedImage(img.getWidth(),
-				img.getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage newImage = null;
 
 		double red, green, blue;
-		float cn, cs, cw, ce;
+		float dn, ds, dw, de;
 
 		for (int k = 0; k < iterations; k++) {
+			newImage = new BufferedImage(img.getWidth(),
+					img.getHeight(), BufferedImage.TYPE_INT_RGB);
 			for (int j = 1; j < img.getHeight() - 1; ++j)
 				for (int i = 1; i < img.getWidth() - 1; ++i) {
 					Color pixel = new Color(img.getRGB(i, j));
@@ -52,58 +47,128 @@ public class Disfunction {
 					Color westPixel = new Color(img.getRGB(i - 1, j));
 
 					// RED
-					cn = (pixel.getRed() - northPixel.getRed());
-					cs = (pixel.getRed() - southPixel.getRed());
-					cw = (pixel.getRed() - westPixel.getRed());
-					ce = (pixel.getRed() - eastPixel.getRed());
+					dn = - (pixel.getRed() - northPixel.getRed());
+					ds = - (pixel.getRed() - southPixel.getRed());
+					dw = - (pixel.getRed() - westPixel.getRed());
+					de = - (pixel.getRed() - eastPixel.getRed());
 
 					red = pixel.getRed()
 							+ lambda
-							* (northPixel.getRed() * cn + southPixel.getRed()
-									* cs + eastPixel.getRed() * ce + westPixel
-									.getRed() * cw);
+							* (dn + ds + de + dw);
 
 					// GREEN
-					cn = (pixel.getGreen() - northPixel.getGreen());
-					cs = (pixel.getGreen() - southPixel.getGreen());
-					cw = (pixel.getGreen() - westPixel.getGreen());
-					ce = (pixel.getGreen() - eastPixel.getGreen());
+					dn = -(pixel.getGreen() - northPixel.getGreen());
+					ds = -(pixel.getGreen() - southPixel.getGreen());
+					dw = -(pixel.getGreen() - westPixel.getGreen());
+					de = -(pixel.getGreen() - eastPixel.getGreen());
 
 					green = pixel.getGreen()
 							+ lambda
-							* (northPixel.getGreen() * cn
-									+ southPixel.getGreen() * cs
-									+ eastPixel.getGreen() * ce + westPixel
-									.getGreen() * cw);
+							* (dn + ds + de + dw);
 
 					// BLUE
-					cn = (pixel.getBlue() - northPixel.getBlue());
-					cs = (pixel.getBlue() - southPixel.getBlue());
-					cw = (pixel.getBlue() - westPixel.getBlue());
-					ce = (pixel.getBlue() - eastPixel.getBlue());
+					dn = -(pixel.getBlue() - northPixel.getBlue());
+					ds = -(pixel.getBlue() - southPixel.getBlue());
+					dw = -(pixel.getBlue() - westPixel.getBlue());
+					de = -(pixel.getBlue() - eastPixel.getBlue());
 
 					blue = pixel.getBlue()
 							+ lambda
-							* (northPixel.getBlue() * cn + southPixel.getBlue()
-									* cs + eastPixel.getBlue() * ce + westPixel
-									.getBlue() * cw);
+							* (dn + ds + de + dw);
 
-					if (red < 0 || red > 255)
-						red = 255;
-					if (green < 0 || green > 255)
-						green = 255;
-					if (blue < 0 || blue > 255)
-						blue = 255;
-
+					red = Math.max(0, Math.min(255, red));
+					green = Math.max(0, Math.min(255, green));
+					blue = Math.max(0, Math.min(255, blue));
+					
 					newImage.setRGB(i, j, new Color((int) red, (int) green,
 							(int) blue).getRGB());
 				}
+			
+			img = newImage;
 		}
 		return newImage;
 	}
+	
+	public static BufferedImage anisotropicDifusionFilter(BufferedImage img,
+			float lambda, int iterations, float sigma) {
 
-	public static BufferedImage isotropicDifusionFilter(BufferedImage img,
-			float lambda) {
-		return anisotropicDifusionFilter(img, lambda, 1);
+		BufferedImage newImage = null;
+
+		double red, green, blue;
+		float dn, ds, dw, de;
+		double cn, cs, cw, ce;
+
+		for (int k = 0; k < iterations; k++) {
+			newImage = new BufferedImage(img.getWidth(),
+					img.getHeight(), BufferedImage.TYPE_INT_RGB);
+			
+			for (int j = 1; j < img.getHeight() - 1; ++j)
+				for (int i = 1; i < img.getWidth() - 1; ++i) {
+					Color pixel = new Color(img.getRGB(i, j));
+					Color northPixel = new Color(img.getRGB(i, j + 1));
+					Color southPixel = new Color(img.getRGB(i, j - 1));
+					Color eastPixel = new Color(img.getRGB(i + 1, j));
+					Color westPixel = new Color(img.getRGB(i - 1, j));
+
+					// RED
+					dn = - (pixel.getRed() - northPixel.getRed());
+					ds = - (pixel.getRed() - southPixel.getRed());
+					dw = - (pixel.getRed() - westPixel.getRed());
+					de = - (pixel.getRed() - eastPixel.getRed());
+					
+					cn = lorentz(dn, sigma);
+					cs = lorentz(ds, sigma);
+					cw = lorentz(dw, sigma);
+					ce = lorentz(de, sigma);
+
+					red = pixel.getRed()
+							+ lambda
+							* (cn*dn + cs*ds + ce*de + cw*dw);
+
+					// GREEN
+					dn = -(pixel.getGreen() - northPixel.getGreen());
+					ds = -(pixel.getGreen() - southPixel.getGreen());
+					dw = -(pixel.getGreen() - westPixel.getGreen());
+					de = -(pixel.getGreen() - eastPixel.getGreen());
+					
+					cn = lorentz(dn, sigma);
+					cs = lorentz(ds, sigma);
+					cw = lorentz(dw, sigma);
+					ce = lorentz(de, sigma);
+
+					green = pixel.getGreen()
+							+ lambda
+							* (cn*dn + cs*ds + ce*de + cw*dw);
+
+					// BLUE
+					dn = -(pixel.getBlue() - northPixel.getBlue());
+					ds = -(pixel.getBlue() - southPixel.getBlue());
+					dw = -(pixel.getBlue() - westPixel.getBlue());
+					de = -(pixel.getBlue() - eastPixel.getBlue());
+					
+					cn = lorentz(dn, sigma);
+					cs = lorentz(ds, sigma);
+					cw = lorentz(dw, sigma);
+					ce = lorentz(de, sigma);
+
+					blue = pixel.getBlue()
+							+ lambda
+							* (cn*dn + cs*ds + ce*de + cw*dw);
+
+					red = Math.max(0, Math.min(255, red));
+					green = Math.max(0, Math.min(255, green));
+					blue = Math.max(0, Math.min(255, blue));
+					
+					newImage.setRGB(i, j, new Color((int) red, (int) green,
+							(int) blue).getRGB());
+				}
+			img = newImage;
+		}
+		
+		return newImage;
+	}
+	
+	private static double lorentz(double x, double sigma){
+		return 1/(1 + Math.pow(x, 2)/Math.pow(sigma, 2));
 	}
 }
