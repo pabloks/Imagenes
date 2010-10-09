@@ -1,10 +1,14 @@
 package com.itba.imagenes;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Random;
 
 public class ImageUtils {
+
+	static Random rand = new Random();
 
 	public static BufferedImage MathOperatorFunction(BufferedImage imgInput1,
 			BufferedImage imgInput2, String oper, Double scalar)
@@ -114,10 +118,10 @@ public class ImageUtils {
 		BufferedImage newImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
 
-		Color color = Color.valueOf(colorStr);
-		if (color == Color.RED) {
+		ColorEnum color = ColorEnum.valueOf(colorStr);
+		if (color == ColorEnum.RED) {
 			index = 0;
-		} else if (color == Color.GREEN) {
+		} else if (color == ColorEnum.GREEN) {
 			index = 1;
 		} else {
 			index = 2;
@@ -144,11 +148,11 @@ public class ImageUtils {
 		double[] rgb = new double[3];
 		int[] histogram = new int[256];
 
-		Color color = Color.valueOf(colorStr);
+		ColorEnum color = ColorEnum.valueOf(colorStr);
 
-		if (color == Color.RED) {
+		if (color == ColorEnum.RED) {
 			index = 0;
-		} else if (color == Color.GREEN) {
+		} else if (color == ColorEnum.GREEN) {
 			index = 1;
 		} else {
 			index = 2;
@@ -259,11 +263,11 @@ public class ImageUtils {
 		int[] histogram = new int[256];
 		double[] s = new double[256];
 
-		Color color = Color.valueOf(colorStr);
+		ColorEnum color = ColorEnum.valueOf(colorStr);
 
-		if (color == Color.RED) {
+		if (color == ColorEnum.RED) {
 			index = 0;
-		} else if (color == Color.GREEN) {
+		} else if (color == ColorEnum.GREEN) {
 			index = 1;
 		} else {
 			index = 2;
@@ -432,41 +436,342 @@ public class ImageUtils {
 		return newPixel;
 	}
 
-	public static BufferedImage Hough(BufferedImage image, double deltaError){
+	public static BufferedImage Hough(BufferedImage image, double deltaError) {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		double[] rgb = new double[3];
 
 		BufferedImage newImage = new BufferedImage(width, height,
 				BufferedImage.TYPE_INT_RGB);
-		
-		double thetas[] = {-Math.PI/2, 0, Math.PI/2 , Math.PI};
-		double ro[] = {width/8, width/4, width/2, width};
-		
-		int[][] matrix = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
-		
+
+		double thetas[] = { -Math.PI / 2, 0, Math.PI / 2, Math.PI };
+		double ro[] = { width / 8, width / 4, width / 2, width };
+
+		int[][] matrix = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 },
+				{ 0, 0, 0, 0 } };
+
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				image.getRaster().getPixel(i,j, rgb);
+				image.getRaster().getPixel(i, j, rgb);
 
 				if ((rgb[0] == 255) || (rgb[1] == 255) || (rgb[2] == 255))
-					for(int k=0; k < thetas.length; k++)
-						for(int l=0; l < ro.length; l++)
-							if (ro[l] - i*Math.cos(thetas[k]) - j*Math.sin(thetas[k]) < deltaError)
-								matrix[k][l] ++;
+					for (int k = 0; k < thetas.length; k++)
+						for (int l = 0; l < ro.length; l++)
+							if (ro[l] - i * Math.cos(thetas[k]) - j
+									* Math.sin(thetas[k]) < deltaError)
+								matrix[k][l]++;
 			}
 		}
-		
+
 		Graphics2D g = newImage.createGraphics();
-		
+
 		for (int i = 0; i < thetas.length; i++) {
 			for (int j = 0; j < ro.length; j++) {
-				if(matrix[i][j] > 0){
-					g.drawLine((int)(ro[j]*Math.sin(thetas[i])), 0, 0, (int)(ro[j]*Math.cos(thetas[i])));
+				if (matrix[i][j] > 0) {
+					g.drawLine((int) (ro[j] * Math.sin(thetas[i])), 0, 0,
+							(int) (ro[j] * Math.cos(thetas[i])));
 				}
 			}
 		}
-		
+
 		return g.getDeviceConfiguration().createCompatibleImage(width, height);
 	}
+
+	public static BufferedImage isotropicDifusionFilter(BufferedImage img,
+			float lambda, int iterations) {
+
+		BufferedImage newImage = null;
+
+		double red, green, blue;
+		float dn, ds, dw, de;
+
+		for (int k = 0; k < iterations; k++) {
+			newImage = new BufferedImage(img.getWidth(), img.getHeight(),
+					BufferedImage.TYPE_INT_RGB);
+			for (int j = 1; j < img.getHeight() - 1; ++j)
+				for (int i = 1; i < img.getWidth() - 1; ++i) {
+					Color pixel = new Color(img.getRGB(i, j));
+					Color northPixel = new Color(img.getRGB(i, j + 1));
+					Color southPixel = new Color(img.getRGB(i, j - 1));
+					Color eastPixel = new Color(img.getRGB(i + 1, j));
+					Color westPixel = new Color(img.getRGB(i - 1, j));
+
+					// RED
+					dn = -(pixel.getRed() - northPixel.getRed());
+					ds = -(pixel.getRed() - southPixel.getRed());
+					dw = -(pixel.getRed() - westPixel.getRed());
+					de = -(pixel.getRed() - eastPixel.getRed());
+
+					red = pixel.getRed() + lambda * (dn + ds + de + dw);
+
+					// GREEN
+					dn = -(pixel.getGreen() - northPixel.getGreen());
+					ds = -(pixel.getGreen() - southPixel.getGreen());
+					dw = -(pixel.getGreen() - westPixel.getGreen());
+					de = -(pixel.getGreen() - eastPixel.getGreen());
+
+					green = pixel.getGreen() + lambda * (dn + ds + de + dw);
+
+					// BLUE
+					dn = -(pixel.getBlue() - northPixel.getBlue());
+					ds = -(pixel.getBlue() - southPixel.getBlue());
+					dw = -(pixel.getBlue() - westPixel.getBlue());
+					de = -(pixel.getBlue() - eastPixel.getBlue());
+
+					blue = pixel.getBlue() + lambda * (dn + ds + de + dw);
+
+					red = Math.max(0, Math.min(255, red));
+					green = Math.max(0, Math.min(255, green));
+					blue = Math.max(0, Math.min(255, blue));
+
+					newImage.setRGB(i, j, new Color((int) red, (int) green,
+							(int) blue).getRGB());
+				}
+
+			img = newImage;
+		}
+		return newImage;
+	}
+
+	public static BufferedImage anisotropicDifusionFilter(BufferedImage img,
+			float lambda, int iterations, float sigma) {
+
+		BufferedImage newImage = null;
+
+		double red, green, blue;
+		float dn, ds, dw, de;
+		double cn, cs, cw, ce;
+
+		for (int k = 0; k < iterations; k++) {
+			newImage = new BufferedImage(img.getWidth(), img.getHeight(),
+					BufferedImage.TYPE_INT_RGB);
+
+			for (int j = 1; j < img.getHeight() - 1; ++j)
+				for (int i = 1; i < img.getWidth() - 1; ++i) {
+					Color pixel = new Color(img.getRGB(i, j));
+					Color northPixel = new Color(img.getRGB(i, j + 1));
+					Color southPixel = new Color(img.getRGB(i, j - 1));
+					Color eastPixel = new Color(img.getRGB(i + 1, j));
+					Color westPixel = new Color(img.getRGB(i - 1, j));
+
+					// RED
+					dn = -(pixel.getRed() - northPixel.getRed());
+					ds = -(pixel.getRed() - southPixel.getRed());
+					dw = -(pixel.getRed() - westPixel.getRed());
+					de = -(pixel.getRed() - eastPixel.getRed());
+
+					cn = lorentz(dn, sigma);
+					cs = lorentz(ds, sigma);
+					cw = lorentz(dw, sigma);
+					ce = lorentz(de, sigma);
+
+					red = pixel.getRed() + lambda
+							* (cn * dn + cs * ds + ce * de + cw * dw);
+
+					// GREEN
+					dn = -(pixel.getGreen() - northPixel.getGreen());
+					ds = -(pixel.getGreen() - southPixel.getGreen());
+					dw = -(pixel.getGreen() - westPixel.getGreen());
+					de = -(pixel.getGreen() - eastPixel.getGreen());
+
+					cn = lorentz(dn, sigma);
+					cs = lorentz(ds, sigma);
+					cw = lorentz(dw, sigma);
+					ce = lorentz(de, sigma);
+
+					green = pixel.getGreen() + lambda
+							* (cn * dn + cs * ds + ce * de + cw * dw);
+
+					// BLUE
+					dn = -(pixel.getBlue() - northPixel.getBlue());
+					ds = -(pixel.getBlue() - southPixel.getBlue());
+					dw = -(pixel.getBlue() - westPixel.getBlue());
+					de = -(pixel.getBlue() - eastPixel.getBlue());
+
+					cn = lorentz(dn, sigma);
+					cs = lorentz(ds, sigma);
+					cw = lorentz(dw, sigma);
+					ce = lorentz(de, sigma);
+
+					blue = pixel.getBlue() + lambda
+							* (cn * dn + cs * ds + ce * de + cw * dw);
+
+					red = Math.max(0, Math.min(255, red));
+					green = Math.max(0, Math.min(255, green));
+					blue = Math.max(0, Math.min(255, blue));
+
+					newImage.setRGB(i, j, new Color((int) red, (int) green,
+							(int) blue).getRGB());
+				}
+			img = newImage;
+		}
+
+		return newImage;
+	}
+
+	private static double lorentz(double x, double sigma) {
+		return 1 / (1 + Math.pow(x, 2) / Math.pow(sigma, 2));
+	}
+
+	public static BufferedImage noiseSaltPepper(BufferedImage img, double p0,
+			double p1) {
+		BufferedImage noised = new BufferedImage(img.getWidth(),
+				img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		double[] rgbPixels = new double[3];
+		double newPixel;
+		double newRand;
+
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				img.getRaster().getPixel(i, j, rgbPixels);
+
+				newPixel = (rgbPixels[0] + rgbPixels[1] + rgbPixels[2]) / 3;
+
+				newRand = rand.nextDouble();
+				if (newRand <= p0)
+					newPixel = 0;
+				else if (newRand >= p1)
+					newPixel = 255;
+
+				rgbPixels[0] = newPixel;
+				rgbPixels[1] = newPixel;
+				rgbPixels[2] = newPixel;
+
+				noised.getRaster().setPixel(i, j, rgbPixels);
+			}
+		}
+
+		return noised;
+	}
+
+	public static BufferedImage noiseGauss(BufferedImage img, double mean,
+			double stddev) {
+		BufferedImage noised = new BufferedImage(img.getWidth(),
+				img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		double[] rgbPixels = new double[3];
+		double newPixel;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				img.getRaster().getPixel(i, j, rgbPixels);
+				// Saco el gris
+				newPixel = (rgbPixels[0] + rgbPixels[1] + rgbPixels[2]) / 3;
+				newPixel += gaussianPDF(mean, stddev);
+
+				if (newPixel < 0 || newPixel > 255)
+					newPixel = 255;
+
+				rgbPixels[0] = newPixel;
+				rgbPixels[1] = newPixel;
+				rgbPixels[2] = newPixel;
+
+				noised.getRaster().setPixel(i, j, rgbPixels);
+			}
+		}
+
+		return noised;
+	}
+
+	public static BufferedImage noiseRayleigh(BufferedImage img, double sigma) {
+		BufferedImage noised = new BufferedImage(img.getWidth(),
+				img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		double[] rgbPixels = new double[3];
+		double newPixel;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				img.getRaster().getPixel(i, j, rgbPixels);
+				// Saco el gris
+				newPixel = (rgbPixels[0] + rgbPixels[1] + rgbPixels[2]) / 3;
+				newPixel *= nextRayleigh(sigma);
+
+				if (newPixel < 0 || newPixel > 255)
+					newPixel = 255;
+
+				rgbPixels[0] = newPixel;
+				rgbPixels[1] = newPixel;
+				rgbPixels[2] = newPixel;
+
+				noised.getRaster().setPixel(i, j, rgbPixels);
+			}
+		}
+
+		return noised;
+	}
+
+	public static BufferedImage noiseExp(BufferedImage img, double lambda) {
+		BufferedImage noised = new BufferedImage(img.getWidth(),
+				img.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+		double[] rgbPixels = new double[3];
+		double newPixel;
+		for (int i = 0; i < img.getWidth(); i++) {
+			for (int j = 0; j < img.getHeight(); j++) {
+				img.getRaster().getPixel(i, j, rgbPixels);
+				// Saco el gris
+				newPixel = (rgbPixels[0] + rgbPixels[1] + rgbPixels[2]) / 3;
+				newPixel *= exp(lambda);
+
+				if (newPixel < 0 || newPixel > 255)
+					newPixel = 255;
+
+				rgbPixels[0] = newPixel;
+				rgbPixels[1] = newPixel;
+				rgbPixels[2] = newPixel;
+
+				noised.getRaster().setPixel(i, j, rgbPixels);
+			}
+		}
+
+		return noised;
+	}
+
+	public static double exp(double lambda) {
+		return -Math.log(1 - Math.random()) / lambda;
+	}
+
+	public static double nextRayleigh(double sigma) {
+		Double ret = Math.sqrt(-2.0D * Math.log(1.0D - rand.nextDouble()))
+				* sigma;
+
+		ret = (ret / Math.pow(sigma, 2))
+				* Math.exp((-Math.pow(ret, 2)) / (2 * Math.pow(sigma, 2)));
+
+		return ret;
+	}
+
+	public static double gaussianPDF(double mean, double stddev) {
+		double gauss = gaussian(mean, stddev);
+		double ret = 0;
+
+		ret = (1 / (stddev * Math.sqrt(2 * Math.PI)))
+				* Math.exp((Math.pow(-gauss - mean, 2))
+						/ (2 * Math.pow(stddev, 2)));
+
+		return ret;
+	}
+
+	public static double gaussian(double mean, double stddev) {
+		return mean + stddev * gaussian();
+	}
+
+	public static double gaussian() {
+		// use the polar form of the Box-Muller transform
+		double r, x, y;
+		do {
+			x = uniform(-1.0, 1.0);
+			y = uniform(-1.0, 1.0);
+			r = x * x + y * y;
+		} while (r >= 1 || r == 0);
+		return x * Math.sqrt(-2 * Math.log(r) / r);
+
+		// Remark: y * Math.sqrt(-2 * Math.log(r) / r)
+		// is an independent random gaussian
+	}
+
+	public static double uniform(double a, double b) {
+		return a + Math.random() * (b - a);
+	}
+
 }

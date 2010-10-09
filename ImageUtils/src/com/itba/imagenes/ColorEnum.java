@@ -1,5 +1,5 @@
 package com.itba.imagenes;
 
-public enum Color {
+public enum ColorEnum {
 	RED, GREEN, BLUE, PROM
 }

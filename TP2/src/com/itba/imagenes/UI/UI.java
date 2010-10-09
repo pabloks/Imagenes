@@ -1,4 +1,4 @@
-package com.itba.imagenes.tp2;
+package com.itba.imagenes.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
@@ -25,7 +25,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.itba.imagenes.Color;
+import com.itba.imagenes.ColorEnum;
 import com.itba.imagenes.ImageMask;
 import com.itba.imagenes.ImageUtils;
 
@@ -243,7 +243,8 @@ public class UI extends JFrame {
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
 							_lastImage = ImageUtils.blackAndWhite(
-									getSelectedImage(), Color.RED.toString());
+									getSelectedImage(),
+									ColorEnum.RED.toString());
 							openImage(_lastImage, "Black And White");
 						}
 					});
@@ -262,109 +263,113 @@ public class UI extends JFrame {
 							System.out.println("actionPerformed() by Browse");
 							// TODO Auto-generated Event stub actionPerformed()
 							BufferedImage _hist = ImageUtils.getHistogram(
-									getSelectedImage(), Color.RED.toString());
+									getSelectedImage(),
+									ColorEnum.RED.toString());
 							openImage(_hist, "Histogram");
 						}
 					});
 		}
 		return btnActionjButtonHist;
 	}
-	
+
 	private JButton getBtnActionjButtonUmb() {
 		JButton btnActionjButtonUmb = new JButton();
 		btnActionjButtonUmb.setBounds(new Rectangle(380, 280, 140, 16));
 		btnActionjButtonUmb.setText("Umbral");
 		btnActionjButtonUmb
-			.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
 
-				if (getSelectedImage() == null) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
-									"Error: no hay imagen de entrada",
-									JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+						if (getSelectedImage() == null) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+											"Error: no hay imagen de entrada",
+											JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 
-				String paramsResult = JOptionPane.showInputDialog(
-						null, "Introduzca parametros: scalar",
-						"Parametros", JOptionPane.OK_CANCEL_OPTION);
+						String paramsResult = JOptionPane.showInputDialog(null,
+								"Introduzca parametros: scalar", "Parametros",
+								JOptionPane.OK_CANCEL_OPTION);
 
-				if (paramsResult == null)
-					return;
+						if (paramsResult == null)
+							return;
 
-				try {
-					String[] params = paramsResult.split(",");
+						try {
+							String[] params = paramsResult.split(",");
 
-					if (params.length != 1)
-						throw new Exception(
-								"Cantidad de parametros incorrecta");
+							if (params.length != 1)
+								throw new Exception(
+										"Cantidad de parametros incorrecta");
 
-					_lastImage = ImageUtils.UmbralFunction(getSelectedImage(), Double.parseDouble(params[0]));
+							_lastImage = ImageUtils.UmbralFunction(
+									getSelectedImage(),
+									Double.parseDouble(params[0]));
 
-					openImage(_lastImage, "Umbral");
-				} catch (Exception ex) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Parametros incorrectos, respete el formato pedido!",
-									"Error: parametros incorrectos",
-									JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-		
+							openImage(_lastImage, "Umbral");
+						} catch (Exception ex) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Parametros incorrectos, respete el formato pedido!",
+											"Error: parametros incorrectos",
+											JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+
 		return btnActionjButtonUmb;
 	}
-	
+
 	private JButton getBtnActionjButtonHough() {
 		JButton btnActionjButtonHough = new JButton();
 		btnActionjButtonHough.setBounds(new Rectangle(380, 300, 140, 16));
 		btnActionjButtonHough.setText("Hough");
 		btnActionjButtonHough
-			.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
 
-				if (getSelectedImage() == null) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
-									"Error: no hay imagen de entrada",
-									JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+						if (getSelectedImage() == null) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+											"Error: no hay imagen de entrada",
+											JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 
-				String paramsResult = JOptionPane.showInputDialog(
-						null, "Introduzca parametros: delta",
-						"Parametros", JOptionPane.OK_CANCEL_OPTION);
+						String paramsResult = JOptionPane.showInputDialog(null,
+								"Introduzca parametros: delta", "Parametros",
+								JOptionPane.OK_CANCEL_OPTION);
 
-				if (paramsResult == null)
-					return;
+						if (paramsResult == null)
+							return;
 
-				try {
-					String[] params = paramsResult.split(",");
+						try {
+							String[] params = paramsResult.split(",");
 
-					if (params.length != 1)
-						throw new Exception(
-								"Cantidad de parametros incorrecta");
+							if (params.length != 1)
+								throw new Exception(
+										"Cantidad de parametros incorrecta");
 
-					_lastImage = ImageUtils.Hough(getSelectedImage(), Double.parseDouble(params[0]));
+							_lastImage = ImageUtils.Hough(getSelectedImage(),
+									Double.parseDouble(params[0]));
 
-					openImage(_lastImage, "Hough");
-				} catch (Exception ex) {
-					JOptionPane
-							.showMessageDialog(
-									null,
-									"Parametros incorrectos, respete el formato pedido!",
-									"Error: parametros incorrectos",
-									JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-		
+							openImage(_lastImage, "Hough");
+						} catch (Exception ex) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Parametros incorrectos, respete el formato pedido!",
+											"Error: parametros incorrectos",
+											JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+
 		return btnActionjButtonHough;
 	}
 
@@ -531,7 +536,7 @@ public class UI extends JFrame {
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = RandomGenerator.noiseGauss(
+								_lastImage = ImageUtils.noiseGauss(
 										getSelectedImage(),
 										Double.parseDouble(params[0]),
 										Double.parseDouble(params[1]));
@@ -585,7 +590,7 @@ public class UI extends JFrame {
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = RandomGenerator.noiseRayleigh(
+								_lastImage = ImageUtils.noiseRayleigh(
 										getSelectedImage(),
 										Double.parseDouble(params[0]));
 
@@ -638,7 +643,7 @@ public class UI extends JFrame {
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = RandomGenerator.noiseExp(
+								_lastImage = ImageUtils.noiseExp(
 										getSelectedImage(),
 										Double.parseDouble(params[0]));
 
@@ -691,7 +696,7 @@ public class UI extends JFrame {
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = RandomGenerator.noiseSaltPepper(
+								_lastImage = ImageUtils.noiseSaltPepper(
 										getSelectedImage(),
 										Double.parseDouble(params[0]),
 										Double.parseDouble(params[1]));
@@ -835,9 +840,12 @@ public class UI extends JFrame {
 								return;
 							}
 
-							String paramsResult = JOptionPane.showInputDialog(
-									null, "Introduzca parametros: lambda,iteraciones",
-									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+							String paramsResult = JOptionPane
+									.showInputDialog(
+											null,
+											"Introduzca parametros: lambda,iteraciones",
+											"Parametros",
+											JOptionPane.OK_CANCEL_OPTION);
 
 							if (paramsResult == null)
 								return;
@@ -849,10 +857,11 @@ public class UI extends JFrame {
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = Disfunction.isotropicDifusionFilter(
-										getSelectedImage(),
-										Float.parseFloat(params[0]),
-										Integer.parseInt(params[1]));
+								_lastImage = ImageUtils
+										.isotropicDifusionFilter(
+												getSelectedImage(),
+												Float.parseFloat(params[0]),
+												Integer.parseInt(params[1]));
 								openImage(_lastImage, "Isotropic");
 							} catch (Exception ex) {
 								JOptionPane
@@ -888,10 +897,12 @@ public class UI extends JFrame {
 								return;
 							}
 
-							String paramsResult = JOptionPane.showInputDialog(
-									null,
-									"Introduzca parametros: lambda,iterations,sigma",
-									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+							String paramsResult = JOptionPane
+									.showInputDialog(
+											null,
+											"Introduzca parametros: lambda,iterations,sigma",
+											"Parametros",
+											JOptionPane.OK_CANCEL_OPTION);
 
 							if (paramsResult == null)
 								return;
@@ -903,7 +914,7 @@ public class UI extends JFrame {
 									throw new Exception(
 											"Cantidad de parametros incorrecta");
 
-								_lastImage = Disfunction
+								_lastImage = ImageUtils
 										.anisotropicDifusionFilter(
 												getSelectedImage(),
 												Float.parseFloat(params[0]),
