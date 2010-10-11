@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Random;
+import com.itba.imagenes.ColorEnum;
 
 import com.itba.imagenes.hough.GreyscaleFilter;
 import com.itba.imagenes.hough.LineHoughTransformOp;
