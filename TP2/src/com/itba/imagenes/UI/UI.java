@@ -99,6 +99,11 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonRoberts(), null);
 			jContentPane.add(getBtnActionjButtonPrewitt(), null);
 			jContentPane.add(getBtnActionjButtonSobel(), null);
+			jContentPane.add(getBtnActionjButtonBorder1(), null);
+			jContentPane.add(getBtnActionjButtonBorder2(), null);
+			jContentPane.add(getBtnActionjButtonBorder3(), null);
+			jContentPane.add(getBtnActionjButtonBorder4(), null);
+			
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
 			jContentPane.add(getBtnActionjButtonUmb(), null);
@@ -111,7 +116,7 @@ public class UI extends JFrame {
 			jContentPane.add(getLabel("Border detector", new Rectangle(380,
 					120, 200, 20)));
 
-			jContentPane.add(getLabel("Utilities", new Rectangle(380, 220, 200,
+			jContentPane.add(getLabel("Utilities", new Rectangle(200, 220, 200,
 					20)));
 
 			jContentPane.add(getLabel("Apply to",
@@ -237,7 +242,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonBW() {
 		if (btnActionjButtonBW == null) {
 			btnActionjButtonBW = new JButton();
-			btnActionjButtonBW.setBounds(new Rectangle(380, 240, 140, 16));
+			btnActionjButtonBW.setBounds(new Rectangle(200, 240, 140, 16));
 			btnActionjButtonBW.setText("Black And White");
 			btnActionjButtonBW
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -255,7 +260,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonHist() {
 		if (btnActionjButtonHist == null) {
 			btnActionjButtonHist = new JButton();
-			btnActionjButtonHist.setBounds(new Rectangle(380, 260, 140, 16));
+			btnActionjButtonHist.setBounds(new Rectangle(200, 260, 140, 16));
 			btnActionjButtonHist.setText("Histogram");
 			btnActionjButtonHist
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -274,7 +279,7 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonUmb() {
 		JButton btnActionjButtonUmb = new JButton();
-		btnActionjButtonUmb.setBounds(new Rectangle(380, 280, 140, 16));
+		btnActionjButtonUmb.setBounds(new Rectangle(200, 280, 140, 16));
 		btnActionjButtonUmb.setText("Umbral");
 		btnActionjButtonUmb
 				.addActionListener(new java.awt.event.ActionListener() {
@@ -325,7 +330,7 @@ public class UI extends JFrame {
 
 	private JButton getBtnActionjButtonHough() {
 		JButton btnActionjButtonHough = new JButton();
-		btnActionjButtonHough.setBounds(new Rectangle(380, 300, 140, 16));
+		btnActionjButtonHough.setBounds(new Rectangle(200, 300, 140, 16));
 		btnActionjButtonHough.setText("Hough");
 		btnActionjButtonHough
 				.addActionListener(new java.awt.event.ActionListener() {
@@ -816,6 +821,78 @@ public class UI extends JFrame {
 					e1.printStackTrace();
 				}
 				openImage(_lastImage, "Border detector (Sobel)");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorder1() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 200, 140, 16));
+		button.setText("Border 1");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { { 1, 1, 1 }, { 1, -2, 1 }, { -1, -1, -1 } };
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+				_lastImage = ImageUtils.filterImage(getSelectedImage(),
+						mask1);
+
+				openImage(_lastImage, "Border detector (Border 1)");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorder2() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 220, 140, 16));
+		button.setText("Border 2 - Kirsh");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { { 5, 5, 5 }, { -3, 0, -3 }, { -3, -3, -3 } };
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+				_lastImage = ImageUtils.filterImage(getSelectedImage(),
+						mask1);
+
+				openImage(_lastImage, "Border detector (Border 2 - Kirsh)");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorder3() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 240, 140, 16));
+		button.setText("Border 3");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { { 1, 1, 1 }, { 0,  0, 0 }, { -1, -1, -1 } };
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+				_lastImage = ImageUtils.filterImage(getSelectedImage(),
+						mask1);
+
+				openImage(_lastImage, "Border detector (Border 3)");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorder4() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 260, 140, 16));
+		button.setText("Border 4");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } };
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+				_lastImage = ImageUtils.filterImage(getSelectedImage(),
+						mask1);
+
+				openImage(_lastImage, "Border detector (Border 4)");
 			}
 		});
 		return button;

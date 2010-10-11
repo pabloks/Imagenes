@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Random;
+import com.itba.imagenes.ColorEnum;
 
 public class ImageUtils {
 
