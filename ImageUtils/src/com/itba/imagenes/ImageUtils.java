@@ -112,6 +112,133 @@ public class ImageUtils {
 
 		return newImage;
 	}
+	
+	private static double varianza(BufferedImage image, int x, int y, int m){
+		double[] rgb = new double[3];
+		double aux = 0;
+		
+		for (int i = x-m; i < x+m; i++) {
+			for (int j = y-m; j < y+m; j++) {
+				image.getRaster().getPixel(i, j, rgb);
+				aux += Math.pow((rgb[0]+rgb[1]+rgb[2])/3 - varianzaW(image, i, j, m),2);
+			}
+		}
+		
+		return aux/Math.pow(2*m + 1, 2);
+	}
+	
+	private static double varianzaW(BufferedImage image, int x, int y, int m){
+		double[] rgb = new double[3];
+		double aux = 0;
+		
+		for (int i = x-m; i < x+m; i++) {
+			for (int j = y-m; j < y+m; j++) {
+				image.getRaster().getPixel(i, j, rgb);
+				aux+= (rgb[0]+rgb[1]+rgb[2])/3;
+			}
+		}
+		
+		return aux/Math.pow(2*m + 1, 2);
+	}
+	
+	public static BufferedImage laplacevarianza(BufferedImage image,int m) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		
+		double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 }, { 0, -1, 0 } };
+		ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+		BufferedImage maskedImage = ImageUtils.filterImage(image,
+				mask1);
+
+		double[] rgb = new double[3];
+		double[] rgbant = new double[3];
+		double[] white = {255,255,255};
+		double[] black = {0,0,0};
+		int umbral = 230;
+		int umbral_laplace = 20;
+		
+		//rows
+		for (int i = 2*m; i < width-2*m; i++) {
+			for (int j = 2*m+1; j < height-2*m; j++) {
+				maskedImage.getRaster().getPixel(i, j-1, rgbant);
+				maskedImage.getRaster().getPixel(i, j, rgb);
+				if ( Math.abs(rgbant[0]-rgb[0]) > umbral ){
+					if ( varianza(maskedImage, i, j, m) < umbral_laplace )
+						newImage.getRaster().setPixel(i, j, white);
+					else
+						newImage.getRaster().setPixel(i, j, black);
+				}else
+					newImage.getRaster().setPixel(i, j, black);
+			}
+		}
+		
+		//cols
+		for (int j = 2*m; j < width-2*m; j++) {
+			for (int i = 2*m+1; i < height-2*m; i++) {
+				maskedImage.getRaster().getPixel(i, j-1, rgbant);
+				maskedImage.getRaster().getPixel(i, j, rgb);
+				if ( Math.abs(rgbant[0]-rgb[0]) > umbral ){
+					if ( varianza(maskedImage, i, j, m) < umbral_laplace )
+						newImage.getRaster().setPixel(i, j, white);
+					else
+						newImage.getRaster().setPixel(i, j, black);
+				}else
+					newImage.getRaster().setPixel(i, j, black);
+			}
+		}
+
+		return newImage;
+	}
+	
+	public static BufferedImage crossbycero(BufferedImage image) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		
+		double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 }, { 0, -1, 0 } };
+		ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+		BufferedImage maskedImage = ImageUtils.filterImage(image,
+				mask1);
+
+		double[] rgb = new double[3];
+		double[] rgbant = new double[3];
+		double[] white = {255,255,255};
+		double[] black = {0,0,0};
+		int umbral = 5;
+		
+		//rows
+		for (int i = 0; i < width; i++) {
+			for (int j = 1; j < height; j++) {
+				maskedImage.getRaster().getPixel(i, j-1, rgbant);
+				maskedImage.getRaster().getPixel(i, j, rgb);
+				if ( Math.abs(rgbant[0]-rgb[0]) < umbral )
+					newImage.getRaster().setPixel(i, j, white);
+				else
+					newImage.getRaster().setPixel(i, j, black);
+			}
+		}
+		
+		//cols
+		for (int j = 0; j < width; j++) {
+			for (int i = 1; i < height; i++) {
+				maskedImage.getRaster().getPixel(i-1, j, rgbant);
+				maskedImage.getRaster().getPixel(i, j, rgb);
+				if ( Math.abs(rgbant[0]-rgb[0]) < umbral )
+					newImage.getRaster().setPixel(i, j, white);
+				else
+					newImage.getRaster().setPixel(i, j, black);
+			}
+		}
+
+		return newImage;
+	}
 
 	public static BufferedImage blackAndWhite(BufferedImage image,
 			String colorStr) {
@@ -351,8 +478,42 @@ public class ImageUtils {
 
 		return newImage;
 	}
+	
+	public static BufferedImage filterImageW(BufferedImage image, ImageMask mask) {
+		int width = image.getWidth();
+		int height = image.getHeight();
+
+		BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+
+		int borderDistanceW = (int) (mask.getWidth() / 2);
+		int borderDistanceH = (int) (mask.getHeight() / 2);
+
+		// obtain pixels
+		for (int i = borderDistanceW; i < width - borderDistanceW; i++) {
+			for (int j = borderDistanceH; j < height - borderDistanceH; j++) {
+				// for each pixel
+				newImage.getRaster().setPixel(i, j,
+						applyMaskW(image, mask, i, j));
+			}
+		}
+
+		return newImage;
+	}
 
 	private static double[] applyMask(BufferedImage image, ImageMask mask,
+			int x, int y) {
+		
+		double[] newPixel = applyMaskW(image, mask, x, y);
+		
+		newPixel[0] = Math.max(newPixel[0],0);
+		newPixel[1] = Math.max(newPixel[1],0);
+		newPixel[2] = Math.max(newPixel[2],0);
+
+		return newPixel;
+	}
+	
+	private static double[] applyMaskW(BufferedImage image, ImageMask mask,
 			int x, int y) {
 		int borderDistanceW = (int) (mask.getWidth() / 2);
 		int borderDistanceH = (int) (mask.getHeight() / 2);
@@ -373,10 +534,6 @@ public class ImageUtils {
 				newPixel[2] += rgb[2] * aux / factor;
 			}
 		}
-
-		newPixel[0] = Math.max(newPixel[0], 0);
-		newPixel[1] = Math.max(newPixel[1], 0);
-		newPixel[2] = Math.max(newPixel[2], 0);
 
 		return newPixel;
 	}

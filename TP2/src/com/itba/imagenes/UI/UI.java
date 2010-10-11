@@ -103,6 +103,9 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonBorder2(), null);
 			jContentPane.add(getBtnActionjButtonBorder3(), null);
 			jContentPane.add(getBtnActionjButtonBorder4(), null);
+			jContentPane.add(getBtnActionjButtonBorderLaplace(), null);
+			jContentPane.add(getBtnActionjButtonBorderCrossByCero(), null);
+			jContentPane.add(getBtnActionjButtonBorderLaplaceV(), null);
 			
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
@@ -893,6 +896,52 @@ public class UI extends JFrame {
 						mask1);
 
 				openImage(_lastImage, "Border detector (Border 4)");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorderLaplace() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 280, 140, 16));
+		button.setText("Border Laplace");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 }, { 0, -1, 0 } };
+				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
+
+				_lastImage = ImageUtils.filterImage(getSelectedImage(),
+						mask1);
+
+				openImage(_lastImage, "Border detector Laplace");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorderCrossByCero() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 300, 140, 16));
+		button.setText("Cross By Cero");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				_lastImage = ImageUtils.crossbycero(getSelectedImage());
+
+				openImage(_lastImage, "Cross By Cero");
+			}
+		});
+		return button;
+	}
+	
+	private JButton getBtnActionjButtonBorderLaplaceV() {
+		JButton button = new JButton();
+		button.setBounds(new Rectangle(380, 320, 140, 16));
+		button.setText("Laplace - Varianza");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(),2);
+
+				openImage(_lastImage, "Laplace - Varianza");
 			}
 		});
 		return button;
