@@ -1,10 +1,14 @@
 package com.itba.imagenes;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Random;
+
+import com.itba.imagenes.hough.GreyscaleFilter;
+import com.itba.imagenes.hough.LineHoughTransformOp;
+import com.itba.imagenes.hough.SobelEdgeDetectorFilter;
+import com.itba.imagenes.hough.ThresholdFilter;
 
 public class ImageUtils {
 
@@ -437,44 +441,35 @@ public class ImageUtils {
 	}
 
 	public static BufferedImage Hough(BufferedImage image, double deltaError) {
-		int width = image.getWidth();
-		int height = image.getHeight();
-		double[] rgb = new double[3];
+		BufferedImage in = image;
 
-		BufferedImage newImage = new BufferedImage(width, height,
-				BufferedImage.TYPE_INT_RGB);
+		GreyscaleFilter s1 = new GreyscaleFilter();
+		SobelEdgeDetectorFilter s2 = new SobelEdgeDetectorFilter();
+		ThresholdFilter s3 = new ThresholdFilter();
 
-		double thetas[] = { -Math.PI / 2, 0, Math.PI / 2, Math.PI };
-		double ro[] = { width / 8, width / 4, width / 2, width };
+		BufferedImage in1 = s1.filter(in); // to greyscale
+		BufferedImage in2 = s2.filter(in1);
+		BufferedImage in3 = s3.filter(in2);
 
-		int[][] matrix = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 },
-				{ 0, 0, 0, 0 } };
+		LineHoughTransformOp hough = new LineHoughTransformOp();
 
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				image.getRaster().getPixel(i, j, rgb);
+		double accRatio = deltaError; // 0.25d
+		int lpn = 7; // 7 local Peaks
 
-				if ((rgb[0] == 255) || (rgb[1] == 255) || (rgb[2] == 255))
-					for (int k = 0; k < thetas.length; k++)
-						for (int l = 0; l < ro.length; l++)
-							if (ro[l] - i * Math.cos(thetas[k]) - j
-									* Math.sin(thetas[k]) < deltaError)
-								matrix[k][l]++;
-			}
-		}
+		hough.setLocalPeakNeighbourhood(lpn);
+		hough.run(in3);
+		hough.setLineColor(Color.RED);
 
-		Graphics2D g = newImage.createGraphics();
-
-		for (int i = 0; i < thetas.length; i++) {
-			for (int j = 0; j < ro.length; j++) {
-				if (matrix[i][j] > 0) {
-					g.drawLine((int) (ro[j] * Math.sin(thetas[i])), 0, 0,
-							(int) (ro[j] * Math.cos(thetas[i])));
-				}
-			}
-		}
-
-		return g.getDeviceConfiguration().createCompatibleImage(width, height);
+		/*
+		 * javax.imageio.ImageIO.write(in2, "png", new java.io.File(
+		 * "houghSobel.png")); javax.imageio.ImageIO.write(in3, "png", new
+		 * java.io.File( "houghInput.png"));
+		 * javax.imageio.ImageIO.write(hough.getAccumulatorImage(), "png", new
+		 * java.io.File("houghAccumulator.png"));
+		 * javax.imageio.ImageIO.write(hough.getSuperimposed(in, accRatio),
+		 * "png", new java.io.File("houghSuperimposed.png"));
+		 */
+		return hough.getSuperimposed(in, accRatio);
 	}
 
 	public static BufferedImage isotropicDifusionFilter(BufferedImage img,
