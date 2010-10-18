@@ -56,6 +56,7 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonSalt = null;
 	private JButton btnActionjButtonIso = null;
 	private JButton btnActionjButtonAniso = null;
+	private JButton btnActionjButtonCanny = null;
 
 	private JPanel jContentPane1 = null;
 	private JTextField PathImage = null;
@@ -106,9 +107,11 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonBorderLaplace(), null);
 			jContentPane.add(getBtnActionjButtonBorderCrossByCero(), null);
 			jContentPane.add(getBtnActionjButtonBorderLaplaceV(), null);
-			
+
 			jContentPane.add(getBtnActionjButtonIso(), null);
 			jContentPane.add(getBtnActionjButtonAniso(), null);
+			jContentPane.add(getBtnActionjButtonCanny(), null);
+
 			jContentPane.add(getBtnActionjButtonUmb(), null);
 			jContentPane.add(getBtnActionjButtonHough(), null);
 
@@ -828,61 +831,60 @@ public class UI extends JFrame {
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorder1() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 200, 140, 16));
 		button.setText("Border 1");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				double[][] values1 = { { 1, 1, 1 }, { 1, -2, 1 }, { -1, -1, -1 } };
+				double[][] values1 = { { 1, 1, 1 }, { 1, -2, 1 },
+						{ -1, -1, -1 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 
-				_lastImage = ImageUtils.filterImage(getSelectedImage(),
-						mask1);
+				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask1);
 
 				openImage(_lastImage, "Border detector (Border 1)");
 			}
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorder2() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 220, 140, 16));
 		button.setText("Border 2 - Kirsh");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				double[][] values1 = { { 5, 5, 5 }, { -3, 0, -3 }, { -3, -3, -3 } };
+				double[][] values1 = { { 5, 5, 5 }, { -3, 0, -3 },
+						{ -3, -3, -3 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 
-				_lastImage = ImageUtils.filterImage(getSelectedImage(),
-						mask1);
+				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask1);
 
 				openImage(_lastImage, "Border detector (Border 2 - Kirsh)");
 			}
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorder3() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 240, 140, 16));
 		button.setText("Border 3");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				double[][] values1 = { { 1, 1, 1 }, { 0,  0, 0 }, { -1, -1, -1 } };
+				double[][] values1 = { { 1, 1, 1 }, { 0, 0, 0 }, { -1, -1, -1 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 
-				_lastImage = ImageUtils.filterImage(getSelectedImage(),
-						mask1);
+				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask1);
 
 				openImage(_lastImage, "Border detector (Border 3)");
 			}
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorder4() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 260, 140, 16));
@@ -892,33 +894,32 @@ public class UI extends JFrame {
 				double[][] values1 = { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 
-				_lastImage = ImageUtils.filterImage(getSelectedImage(),
-						mask1);
+				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask1);
 
 				openImage(_lastImage, "Border detector (Border 4)");
 			}
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorderLaplace() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 280, 140, 16));
 		button.setText("Border Laplace");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 }, { 0, -1, 0 } };
+				double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 },
+						{ 0, -1, 0 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 
-				_lastImage = ImageUtils.filterImage(getSelectedImage(),
-						mask1);
+				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask1);
 
 				openImage(_lastImage, "Border detector Laplace");
 			}
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorderCrossByCero() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 300, 140, 16));
@@ -932,14 +933,14 @@ public class UI extends JFrame {
 		});
 		return button;
 	}
-	
+
 	private JButton getBtnActionjButtonBorderLaplaceV() {
 		JButton button = new JButton();
 		button.setBounds(new Rectangle(380, 320, 140, 16));
 		button.setText("Laplace - Varianza");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(),2);
+				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(), 2);
 
 				openImage(_lastImage, "Laplace - Varianza");
 			}
@@ -1060,6 +1061,60 @@ public class UI extends JFrame {
 			btnActionjButtonAniso.setToolTipText("lambda, cn, cs, ce, cw");
 		}
 		return btnActionjButtonAniso;
+	}
+
+	private JButton getBtnActionjButtonCanny() {
+		if (btnActionjButtonCanny == null) {
+			btnActionjButtonCanny = new JButton();
+			btnActionjButtonCanny.setBounds(new Rectangle(380, 340, 140, 16));
+			btnActionjButtonCanny.setText("Canny");
+			btnActionjButtonCanny
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+
+							String paramsResult = JOptionPane.showInputDialog(
+									null,
+									"Introduzca parametros: lowTres, hiTres",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 2)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = ImageUtils.Canny(
+										getSelectedImage(),
+										Float.parseFloat(params[0]),
+										Float.parseFloat(params[1]));
+								openImage(_lastImage, "Canny");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					});
+			btnActionjButtonCanny.setToolTipText("lowTres, hiTres");
+		}
+		return btnActionjButtonCanny;
 	}
 
 	private void openImage(BufferedImage image, String Title) {
