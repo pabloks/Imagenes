@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities;
 import com.itba.imagenes.ColorEnum;
 import com.itba.imagenes.ImageMask;
 import com.itba.imagenes.ImageUtils;
+import com.itba.imagenes.susan.Susan;
 
 // do not import the package when you are already in it
 // everything inside the package is accessible as-is
@@ -56,7 +57,10 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonSalt = null;
 	private JButton btnActionjButtonIso = null;
 	private JButton btnActionjButtonAniso = null;
+	private JButton btnActionjButtonSusanEdges = null;
 	private JButton btnActionjButtonCanny = null;
+
+	private JButton btnActionjButtonHoughCircle = null;
 
 	private JPanel jContentPane1 = null;
 	private JTextField PathImage = null;
@@ -112,8 +116,11 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonAniso(), null);
 			jContentPane.add(getBtnActionjButtonCanny(), null);
 
+			jContentPane.add(getBtnActionjButtonSusanEdges(), null);
+
 			jContentPane.add(getBtnActionjButtonUmb(), null);
 			jContentPane.add(getBtnActionjButtonHough(), null);
+			jContentPane.add(getBtnActionjButtonHoughCircle(), null);
 
 			jContentPane
 					.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
@@ -382,6 +389,61 @@ public class UI extends JFrame {
 				});
 
 		return btnActionjButtonHough;
+	}
+
+	private JButton getBtnActionjButtonHoughCircle() {
+		btnActionjButtonHoughCircle = new JButton();
+		btnActionjButtonHoughCircle.setBounds(new Rectangle(200, 320, 140, 16));
+		btnActionjButtonHoughCircle.setText("Hough Circles");
+		btnActionjButtonHoughCircle
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+
+						if (getSelectedImage() == null) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+											"Error: no hay imagen de entrada",
+											JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+
+						String paramsResult = JOptionPane
+								.showInputDialog(
+										null,
+										"Introduzca parametros: ciclesRadius,numberOfCicles",
+										"Parametros",
+										JOptionPane.OK_CANCEL_OPTION);
+
+						if (paramsResult == null)
+							return;
+
+						try {
+							String[] params = paramsResult.split(",");
+
+							if (params.length != 2)
+								throw new Exception(
+										"Cantidad de parametros incorrecta");
+
+							_lastImage = ImageUtils.HoughCircle(
+									getSelectedImage(),
+									Integer.parseInt(params[0]),
+									Integer.parseInt(params[1]));
+
+							openImage(_lastImage, "Hough Circles");
+						} catch (Exception ex) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Parametros incorrectos, respete el formato pedido!",
+											"Error: parametros incorrectos",
+											JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+
+		return btnActionjButtonHoughCircle;
 	}
 
 	private JButton getBtnActionjButtonFilt3high() {
@@ -1061,6 +1123,58 @@ public class UI extends JFrame {
 			btnActionjButtonAniso.setToolTipText("lambda, cn, cs, ce, cw");
 		}
 		return btnActionjButtonAniso;
+	}
+
+	private JButton getBtnActionjButtonSusanEdges() {
+		if (btnActionjButtonSusanEdges == null) {
+			btnActionjButtonSusanEdges = new JButton();
+			btnActionjButtonSusanEdges
+					.setBounds(new Rectangle(20, 330, 140, 16));
+			btnActionjButtonSusanEdges.setText("Susan Edges");
+			btnActionjButtonSusanEdges
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: threshold",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 1)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = Susan.susan(getSelectedImage(),
+										Float.parseFloat(params[0]), true);
+								openImage(_lastImage, "Susan Edges");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					});
+			btnActionjButtonSusanEdges.setToolTipText("threshold");
+		}
+		return btnActionjButtonSusanEdges;
 	}
 
 	private JButton getBtnActionjButtonCanny() {

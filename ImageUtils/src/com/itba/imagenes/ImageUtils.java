@@ -1,15 +1,32 @@
 package com.itba.imagenes;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.MemoryImageSource;
+import java.awt.image.PixelGrabber;
 import java.util.Arrays;
 import java.util.Random;
+
+import javax.swing.ImageIcon;
 
 import com.itba.imagenes.canny.CannyEdgeDetector;
 import com.itba.imagenes.hough.GreyscaleFilter;
 import com.itba.imagenes.hough.LineHoughTransformOp;
 import com.itba.imagenes.hough.SobelEdgeDetectorFilter;
 import com.itba.imagenes.hough.ThresholdFilter;
+import com.itba.imagenes.hough.circleHough;
+import com.itba.imagenes.hough.hystThresh;
+import com.itba.imagenes.hough.nonMaxSuppression;
+import com.itba.imagenes.hough.sobel;
 
 public class ImageUtils {
 
@@ -628,6 +645,170 @@ public class ImageUtils {
 		 * "png", new java.io.File("houghSuperimposed.png"));
 		 */
 		return hough.getSuperimposed(in, accRatio);
+	}
+
+	public static BufferedImage HoughCircle(BufferedImage img,
+			int ciclesRadius, int numberOfCicles) {
+
+		Image image = img.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+
+		Image LinesImage = null, SobelImage = null, MaxSuppImage = null, HystImage = null, OverlayImage = null, HoughAccImage = null;
+
+		int lines = numberOfCicles;
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		int orig[] = null;
+		orig = new int[width * height];
+		PixelGrabber grabber = new PixelGrabber(image, 0, 0, width, height,
+				orig, 0, width);
+		try {
+			grabber.grabPixels();
+
+			sobel sobelObject = new sobel();
+			nonMaxSuppression nonMaxSuppressionObject = new nonMaxSuppression();
+			hystThresh hystThreshObject = new hystThresh();
+			circleHough circleHoughObject = new circleHough();
+
+			sobelObject.init(orig, width, height);
+			orig = sobelObject.process();
+			double direction[] = new double[width * height];
+			direction = sobelObject.getDirection();
+			SobelImage = Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, orig, 0, width));
+
+			nonMaxSuppressionObject.init(orig, direction, width, height);
+			orig = nonMaxSuppressionObject.process();
+			MaxSuppImage = Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, orig, 0, width));
+
+			hystThreshObject.init(orig, width, height, 25, 50);
+			orig = hystThreshObject.process();
+			HystImage = Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, orig, 0, width));
+
+			circleHoughObject.init(orig, width, height, ciclesRadius);
+			circleHoughObject.setLines(lines);
+			orig = circleHoughObject.process();
+			OverlayImage = Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, overlayImage(orig,
+							image), 0, width));
+
+			@SuppressWarnings("unused")
+			int rmax = (int) Math.sqrt(width * width + height * height);
+			int acc[] = new int[width * height];
+			acc = circleHoughObject.getAcc();
+			HoughAccImage = Toolkit
+					.getDefaultToolkit()
+					.createImage(
+							new MemoryImageSource(width, height, acc, 0, width))
+					.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+
+			LinesImage = Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, orig, 0, width));
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return toBufferedImage(OverlayImage);
+	}
+
+	public static int[] overlayImage(int[] input, Image image) {
+
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		int[] myImage = new int[width * height];
+
+		PixelGrabber grabber = new PixelGrabber(image, 0, 0, width, height,
+				myImage, 0, width);
+		try {
+			grabber.grabPixels();
+		} catch (InterruptedException e2) {
+			System.out.println("error: " + e2);
+		}
+
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if ((input[y * width + x] & 0xff) > 0)
+					myImage[y * width + x] = 0xffff0000;
+			}
+		}
+
+		return myImage;
+	}
+
+	// This method returns a buffered image with the contents of an image
+	public static BufferedImage toBufferedImage(Image image) {
+		if (image instanceof BufferedImage) {
+			return (BufferedImage) image;
+		}
+
+		// This code ensures that all the pixels in the image are loaded
+		image = new ImageIcon(image).getImage();
+
+		// Determine if the image has transparent pixels; for this method's
+		// implementation, see Determining If an Image Has Transparent Pixels
+		boolean hasAlpha = hasAlpha(image);
+
+		// Create a buffered image with a format that's compatible with the
+		// screen
+		BufferedImage bimage = null;
+		GraphicsEnvironment ge = GraphicsEnvironment
+				.getLocalGraphicsEnvironment();
+		try {
+			// Determine the type of transparency of the new buffered image
+			int transparency = Transparency.OPAQUE;
+			if (hasAlpha) {
+				transparency = Transparency.BITMASK;
+			}
+
+			// Create the buffered image
+			GraphicsDevice gs = ge.getDefaultScreenDevice();
+			GraphicsConfiguration gc = gs.getDefaultConfiguration();
+			bimage = gc.createCompatibleImage(image.getWidth(null),
+					image.getHeight(null), transparency);
+		} catch (HeadlessException e) {
+			// The system does not have a screen
+		}
+
+		if (bimage == null) {
+			// Create a buffered image using the default color model
+			int type = BufferedImage.TYPE_INT_RGB;
+			if (hasAlpha) {
+				type = BufferedImage.TYPE_INT_ARGB;
+			}
+			bimage = new BufferedImage(image.getWidth(null),
+					image.getHeight(null), type);
+		}
+
+		// Copy image to buffered image
+		Graphics g = bimage.createGraphics();
+
+		// Paint the image onto the buffered image
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
+
+		return bimage;
+	}
+
+	// This method returns true if the specified image has transparent pixels
+	public static boolean hasAlpha(Image image) {
+		// If buffered image, the color model is readily available
+		if (image instanceof BufferedImage) {
+			BufferedImage bimage = (BufferedImage) image;
+			return bimage.getColorModel().hasAlpha();
+		}
+
+		// Use a pixel grabber to retrieve the image's color model;
+		// grabbing a single pixel is usually sufficient
+		PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
+		try {
+			pg.grabPixels();
+		} catch (InterruptedException e) {
+		}
+
+		// Get the image's color model
+		ColorModel cm = pg.getColorModel();
+		return cm.hasAlpha();
 	}
 
 	public static BufferedImage Canny(BufferedImage image, float low, float hi) {
