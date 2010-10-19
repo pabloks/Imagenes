@@ -27,6 +27,7 @@ import com.itba.imagenes.hough.circleHough;
 import com.itba.imagenes.hough.hystThresh;
 import com.itba.imagenes.hough.nonMaxSuppression;
 import com.itba.imagenes.hough.sobel;
+import com.itba.imagenes.nonmax.nonmax;
 
 public class ImageUtils {
 
@@ -647,6 +648,7 @@ public class ImageUtils {
 		return hough.getSuperimposed(in, accRatio);
 	}
 
+	@SuppressWarnings("unused")
 	public static BufferedImage HoughCircle(BufferedImage img,
 			int ciclesRadius, int numberOfCicles) {
 
@@ -693,7 +695,6 @@ public class ImageUtils {
 					new MemoryImageSource(width, height, overlayImage(orig,
 							image), 0, width));
 
-			@SuppressWarnings("unused")
 			int rmax = (int) Math.sqrt(width * width + height * height);
 			int acc[] = new int[width * height];
 			acc = circleHoughObject.getAcc();
@@ -809,6 +810,61 @@ public class ImageUtils {
 		// Get the image's color model
 		ColorModel cm = pg.getColorModel();
 		return cm.hasAlpha();
+	}
+
+	@SuppressWarnings("unused")
+	public static BufferedImage NonMax(BufferedImage img, int mode) {
+
+		Image image = img.getScaledInstance(256, 256, Image.SCALE_SMOOTH);
+
+		Image edges = null, output = null;
+
+		int width = image.getWidth(null);
+		int height = image.getHeight(null);
+		int orig[] = null;
+		orig = new int[width * height];
+		PixelGrabber grabber = new PixelGrabber(image, 0, 0, width, height,
+				orig, 0, width);
+
+		try {
+			grabber.grabPixels();
+
+			// original -> mode 1
+			// edge -> mode 2
+			// threshold -> mode 3
+
+			sobel edgedetector = new sobel();
+			nonmax nonmaxOp = new nonmax();
+
+			edgedetector.init(orig, width, height);
+			if (mode > 1)
+				orig = edgedetector.process();
+			if (mode == 3)
+				orig = threshold(orig, 50);
+
+			edges = image;
+			Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, orig, 0, width));
+
+			nonmaxOp.init(orig, width, height);
+			orig = nonmaxOp.process();
+			output = Toolkit.getDefaultToolkit().createImage(
+					new MemoryImageSource(width, height, orig, 0, width));
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		return toBufferedImage(output);
+	}
+
+	public static int[] threshold(int[] original, int value) {
+		for (int x = 0; x < original.length; x++) {
+			if ((original[x] & 0xff) >= value)
+				original[x] = 0xffffffff;
+			else
+				original[x] = 0xff000000;
+		}
+		return original;
 	}
 
 	public static BufferedImage Canny(BufferedImage image, float low, float hi) {

@@ -61,6 +61,7 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonCanny = null;
 
 	private JButton btnActionjButtonHoughCircle = null;
+	private JButton btnActionjButtonNonMax = null;
 
 	private JPanel jContentPane1 = null;
 	private JTextField PathImage = null;
@@ -121,6 +122,7 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonUmb(), null);
 			jContentPane.add(getBtnActionjButtonHough(), null);
 			jContentPane.add(getBtnActionjButtonHoughCircle(), null);
+			jContentPane.add(getBtnActionjButtonNonMax(), null);
 
 			jContentPane
 					.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
@@ -444,6 +446,59 @@ public class UI extends JFrame {
 				});
 
 		return btnActionjButtonHoughCircle;
+	}
+
+	private JButton getBtnActionjButtonNonMax() {
+		btnActionjButtonNonMax = new JButton();
+		btnActionjButtonNonMax.setBounds(new Rectangle(200, 340, 140, 16));
+		btnActionjButtonNonMax.setText("Supresion nonmax");
+		btnActionjButtonNonMax
+				.addActionListener(new java.awt.event.ActionListener() {
+					public void actionPerformed(java.awt.event.ActionEvent e) {
+
+						if (getSelectedImage() == null) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+											"Error: no hay imagen de entrada",
+											JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+
+						String paramsResult = JOptionPane
+								.showInputDialog(
+										null,
+										"Introduzca parametros: mode (original->1, edges->2, threshold->3",
+										"Parametros",
+										JOptionPane.OK_CANCEL_OPTION);
+
+						if (paramsResult == null)
+							return;
+
+						try {
+							String[] params = paramsResult.split(",");
+
+							if (params.length != 1)
+								throw new Exception(
+										"Cantidad de parametros incorrecta");
+
+							_lastImage = ImageUtils.NonMax(getSelectedImage(),
+									Integer.parseInt(params[0]));
+
+							openImage(_lastImage, "Supresion de no maximos");
+						} catch (Exception ex) {
+							JOptionPane
+									.showMessageDialog(
+											null,
+											"Parametros incorrectos, respete el formato pedido!",
+											"Error: parametros incorrectos",
+											JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+
+		return btnActionjButtonNonMax;
 	}
 
 	private JButton getBtnActionjButtonFilt3high() {
