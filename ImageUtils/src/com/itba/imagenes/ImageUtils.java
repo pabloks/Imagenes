@@ -177,19 +177,22 @@ public class ImageUtils {
 		double[] rgbant = new double[3];
 		double[] white = { 255, 255, 255 };
 		double[] black = { 0, 0, 0 };
-		int umbral = 230;
-		int umbral_laplace = 20;
+		int umbral = 20;
+		int umbral_laplace = 1;
+		// m = 5;
 
 		// rows
 		for (int i = 2 * m; i < width - 2 * m; i++) {
 			for (int j = 2 * m + 1; j < height - 2 * m; j++) {
 				maskedImage.getRaster().getPixel(i, j - 1, rgbant);
 				maskedImage.getRaster().getPixel(i, j, rgb);
+				// System.out.println(Math.abs(rgbant[0] - rgb[0]));
 				if (Math.abs(rgbant[0] - rgb[0]) > umbral) {
-					if (varianza(maskedImage, i, j, m) < umbral_laplace)
+					if (varianza(maskedImage, i, j, m) < umbral_laplace) {
 						newImage.getRaster().setPixel(i, j, white);
-					else
+					} else {
 						newImage.getRaster().setPixel(i, j, black);
+					}
 				} else
 					newImage.getRaster().setPixel(i, j, black);
 			}
@@ -200,11 +203,13 @@ public class ImageUtils {
 			for (int i = 2 * m + 1; i < height - 2 * m; i++) {
 				maskedImage.getRaster().getPixel(i, j - 1, rgbant);
 				maskedImage.getRaster().getPixel(i, j, rgb);
+				// System.out.println(Math.abs(rgbant[0] - rgb[0]));
 				if (Math.abs(rgbant[0] - rgb[0]) > umbral) {
-					if (varianza(maskedImage, i, j, m) < umbral_laplace)
+					if (varianza(maskedImage, i, j, m) < umbral_laplace) {
 						newImage.getRaster().setPixel(i, j, white);
-					else
+					} else {
 						newImage.getRaster().setPixel(i, j, black);
+					}
 				} else
 					newImage.getRaster().setPixel(i, j, black);
 			}
@@ -867,11 +872,14 @@ public class ImageUtils {
 		return original;
 	}
 
-	public static BufferedImage Canny(BufferedImage image, float low, float hi) {
+	public static BufferedImage Canny(BufferedImage image, float low, float hi,
+			boolean withHysteresis) {
 		CannyEdgeDetector detector = new CannyEdgeDetector();
 
-		detector.setLowThreshold(low);
-		detector.setHighThreshold(hi);
+		if (withHysteresis) {
+			detector.setLowThreshold(low);
+			detector.setHighThreshold(hi);
+		}
 
 		detector.setSourceImage(image);
 		detector.process();

@@ -58,10 +58,12 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonIso = null;
 	private JButton btnActionjButtonAniso = null;
 	private JButton btnActionjButtonSusanEdges = null;
+	private JButton btnActionjButtonSusanCorners = null;
 	private JButton btnActionjButtonCanny = null;
 
 	private JButton btnActionjButtonHoughCircle = null;
 	private JButton btnActionjButtonNonMax = null;
+	private JButton btnActionjButtonHysteresis = null;
 
 	private JPanel jContentPane1 = null;
 	private JTextField PathImage = null;
@@ -118,11 +120,13 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonCanny(), null);
 
 			jContentPane.add(getBtnActionjButtonSusanEdges(), null);
+			jContentPane.add(getBtnActionjButtonSusanCorners(), null);
 
 			jContentPane.add(getBtnActionjButtonUmb(), null);
 			jContentPane.add(getBtnActionjButtonHough(), null);
 			jContentPane.add(getBtnActionjButtonHoughCircle(), null);
 			jContentPane.add(getBtnActionjButtonNonMax(), null);
+			jContentPane.add(getBtnActionjButtonHysteresis(), null);
 
 			jContentPane
 					.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
@@ -1232,6 +1236,58 @@ public class UI extends JFrame {
 		return btnActionjButtonSusanEdges;
 	}
 
+	private JButton getBtnActionjButtonSusanCorners() {
+		if (btnActionjButtonSusanCorners == null) {
+			btnActionjButtonSusanCorners = new JButton();
+			btnActionjButtonSusanCorners.setBounds(new Rectangle(20, 350, 140,
+					16));
+			btnActionjButtonSusanCorners.setText("Susan Corners");
+			btnActionjButtonSusanCorners
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+
+							String paramsResult = JOptionPane.showInputDialog(
+									null, "Introduzca parametros: threshold",
+									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 1)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = Susan.susan(getSelectedImage(),
+										Float.parseFloat(params[0]), false);
+								openImage(_lastImage, "Susan Corners");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					});
+			btnActionjButtonSusanCorners.setToolTipText("threshold");
+		}
+		return btnActionjButtonSusanCorners;
+	}
+
 	private JButton getBtnActionjButtonCanny() {
 		if (btnActionjButtonCanny == null) {
 			btnActionjButtonCanny = new JButton();
@@ -1251,10 +1307,50 @@ public class UI extends JFrame {
 								return;
 							}
 
-							String paramsResult = JOptionPane.showInputDialog(
-									null,
-									"Introduzca parametros: lowTres, hiTres",
-									"Parametros", JOptionPane.OK_CANCEL_OPTION);
+							try {
+								_lastImage = ImageUtils.Canny(
+										getSelectedImage(), 0, 0, false);
+								openImage(_lastImage, "Canny");
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					});
+		}
+		return btnActionjButtonCanny;
+	}
+
+	private JButton getBtnActionjButtonHysteresis() {
+		if (btnActionjButtonHysteresis == null) {
+			btnActionjButtonHysteresis = new JButton();
+			btnActionjButtonHysteresis.setBounds(new Rectangle(380, 360, 140,
+					16));
+			btnActionjButtonHysteresis.setText("Umbralizacion hyst");
+			btnActionjButtonHysteresis
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+
+							String paramsResult = JOptionPane
+									.showInputDialog(
+											null,
+											"Introduzca parametros: lowThreshold,hiThreshold",
+											"Parametros",
+											JOptionPane.OK_CANCEL_OPTION);
 
 							if (paramsResult == null)
 								return;
@@ -1269,8 +1365,8 @@ public class UI extends JFrame {
 								_lastImage = ImageUtils.Canny(
 										getSelectedImage(),
 										Float.parseFloat(params[0]),
-										Float.parseFloat(params[1]));
-								openImage(_lastImage, "Canny");
+										Float.parseFloat(params[1]), true);
+								openImage(_lastImage, "Umbralizacion hyst");
 							} catch (Exception ex) {
 								JOptionPane
 										.showMessageDialog(
@@ -1281,9 +1377,10 @@ public class UI extends JFrame {
 							}
 						}
 					});
-			btnActionjButtonCanny.setToolTipText("lowTres, hiTres");
+			btnActionjButtonHysteresis
+					.setToolTipText("lowThreshold,hiThreshold");
 		}
-		return btnActionjButtonCanny;
+		return btnActionjButtonHysteresis;
 	}
 
 	private void openImage(BufferedImage image, String Title) {

@@ -4,65 +4,81 @@ import java.awt.image.BufferedImage;
 
 public class Susan {
 
-	public static BufferedImage susan(BufferedImage img, float threshold,
-			boolean isEdgeDetection) {
-		BufferedImage newImage = new BufferedImage(img.getWidth(),
-				img.getHeight(), BufferedImage.TYPE_INT_RGB);
+	public static BufferedImage susan(BufferedImage inputImage, final float t,
+			final boolean detectEdge) {
 
-		int[][] mask = { { 0, 0, 1, 1, 1, 0, 0 }, { 0, 1, 1, 1, 1, 1, 0 },
+		final int dim = 7;
+		final int diff = dim / 2;
+		final int max = diff + 1;
+		final float[][] mask = new float[][] { { 0, 0, 1, 1, 1, 0, 0 },
+				{ 0, 1, 1, 1, 1, 1, 0 }, { 1, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1 }, { 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1 }, { 0, 1, 1, 1, 1, 1, 0 },
-				{ 0, 0, 1, 1, 1, 0, 0 } };
+				{ 0, 1, 1, 1, 1, 1, 0 }, { 0, 0, 1, 1, 1, 0, 0 }, };
 
-		// define the USAN area
-		float nmax = 3 * 37 / 4;
-		// float nmax = 37;
-
-		int a = img.getWidth();
-		int b = img.getHeight();
+		final double[] gray = { 125, 125, 125 };
+		final double[] white = { 255, 255, 255 };
+		final double[] red = { 255, 0, 0 };
 		double[] rgb = new double[3];
-		double r0, pivot;
-		int acum = 0;
-		double s;
 
-		// Arranco en (3,3) y llego hasta (width-4, height-4) para aplicarle la
-		// mascara
-		for (int i = 3; i < a - 4; i++) {
-			for (int j = 3; j < b - 4; j++) {
+		int width = inputImage.getWidth();
+		int height = inputImage.getHeight();
 
-				// El centro de la mascara siempre es i,j
-				img.getRaster().getPixel(i, j, rgb);
-				r0 = (rgb[0] + rgb[1] + rgb[2]) / 3;
-				acum = 0;
+		final BufferedImage newImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		// final Image newImage = new Image(getWidth(), getHeight(),
+		// Color.BLACK);
+		height = inputImage.getHeight() - diff;
+		for (int j = diff; j < height; ++j) {
+			width = inputImage.getWidth() - diff;
+			for (int i = diff; i < width; ++i) {
+				inputImage.getRaster().getPixel(i, j, rgb);
+				Color center = new com.itba.imagenes.susan.Color(
+						(float) rgb[0], (float) rgb[1], (float) rgb[2]);
 
-				// Recorro toda la mascara:
-				for (int k = 0; k < mask.length; k++) {
-					for (int l = 0; l < mask[k].length; l++) {
-						if (mask[k][l] == 1) {
-							img.getRaster().getPixel(i + k - 3, j + l - 3, rgb);
-							pivot = (rgb[0] + rgb[1] + rgb[2]) / 3;
-							if (Math.abs(pivot - r0) < threshold)
-								acum++;
-						}
+				Color result = new Color(0);
+				for (int v = -diff; v < max; ++v) {
+					for (int u = -diff; u < max; ++u) {
+						float value = mask[diff + v][diff + u];
+						if (value == 0.0)
+							continue;
+
+						inputImage.getRaster().getPixel(i + u, j + v, rgb);
+						Color pixel = new com.itba.imagenes.susan.Color(
+								(float) rgb[0], (float) rgb[1], (float) rgb[2]);
+						// System.out.println("value:" + value + " pixel:" +
+						// pixel.red + " center:" + center.red + " diff:" +
+						// Math.abs((value * pixel.red) - center.red));
+						result.red += (Math.abs((value * pixel.red)
+								- center.red) < t) ? 1.0 : 0.0;
+						result.green += (Math.abs((value * pixel.green)
+								- center.green) < t) ? 1.0 : 0.0;
+						result.blue += (Math.abs((value * pixel.blue)
+								- center.blue) < t) ? 1.0 : 0.0;
 					}
 				}
-
-				System.out.println(acum);
-
-				s = 1 - acum / nmax;
-				// s -> 0 r0 no es borde
-				// s -> 0.5 r0 es borde
-				// s -> 0.75 r0 es esquina
-
-				rgb[0] = 255;
-				rgb[1] = 255;
-				rgb[2] = 255;
-
-				if ((isEdgeDetection && Math.abs(s - 0.5) < 0.1)
-						|| (!isEdgeDetection && Math.abs(s - 0.75) < 0.1))
-					newImage.getRaster().setPixel(i, j, rgb);
+				// System.out.println(result);
+				final int x = i;
+				final int y = j;
+				result.transformColor(new Color.ChannelTransformation() {
+					@Override
+					public float transform(float value, Channel channel) {
+						value = 1.0f - (value / 37.0f);
+						// System.out.println(value);
+						if (detectEdge && Math.abs(value - 0.5) < 0.05) {
+							newImage.getRaster().setPixel(x, y, gray);
+							// System.out.println("BORDE " + Math.abs(value -
+							// 0.5));
+						} else if (Math.abs(value - 0.75) < 0.05) {
+							// System.out.println("ESQUINA " + Math.abs(value -
+							// 0.75));
+							newImage.getRaster().setPixel(x, y, red);
+						}
+						return value;
+					}
+				}, Channel.ALL);
 			}
 		}
 		return newImage;
+
 	}
 }
