@@ -68,7 +68,7 @@ public class Susan {
 							newImage.getRaster().setPixel(x, y, gray);
 							// System.out.println("BORDE " + Math.abs(value -
 							// 0.5));
-						} else if (Math.abs(value - 0.75) < 0.05) {
+						} else if (!detectEdge && Math.abs(value - 0.75) < 0.05) {
 							// System.out.println("ESQUINA " + Math.abs(value -
 							// 0.75));
 							newImage.getRaster().setPixel(x, y, red);

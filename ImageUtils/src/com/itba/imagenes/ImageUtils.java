@@ -177,8 +177,8 @@ public class ImageUtils {
 		double[] rgbant = new double[3];
 		double[] white = { 255, 255, 255 };
 		double[] black = { 0, 0, 0 };
-		int umbral = 20;
-		int umbral_laplace = 1;
+		int umbral = 10;
+		int umbral_laplace = 150;
 		// m = 5;
 
 		// rows
