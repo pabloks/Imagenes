@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageTypeSpecifier;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -1032,8 +1033,18 @@ public class UI extends JFrame {
 				double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 },
 						{ 0, -1, 0 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
-
-				_lastImage = ImageUtils.filterImage(getSelectedImage(), mask1);
+				double[][] img = ImageUtils.filterImage2(getSelectedImage(), mask1);
+				double[] auxD = new double[3];
+				
+				BufferedImage aux = new BufferedImage(getSelectedImage().getWidth(), getSelectedImage().getHeight(), BufferedImage.TYPE_INT_RGB);
+				
+				for(int i = 0; i< aux.getHeight(); i++)
+					for(int j=0; j<aux.getWidth();j++){
+						auxD[0] = auxD[1] = auxD[2] = img[j][i];
+						aux.getRaster().setPixel(j, i, auxD);
+					}
+				
+				_lastImage = aux; 
 
 				openImage(_lastImage, "Border detector Laplace");
 			}
@@ -1047,7 +1058,7 @@ public class UI extends JFrame {
 		button.setText("Cross By Cero");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				_lastImage = ImageUtils.crossbycero(getSelectedImage());
+				_lastImage = ImageUtils.crossbycero(getSelectedImage(), 50);
 
 				openImage(_lastImage, "Cross By Cero");
 			}
@@ -1061,7 +1072,7 @@ public class UI extends JFrame {
 		button.setText("Laplace - Varianza");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(), 2);
+				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(), 3, 50);
 
 				openImage(_lastImage, "Laplace - Varianza");
 			}

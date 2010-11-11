@@ -5,9 +5,9 @@ public class Color {
 	public static final Color BLACK = new Color(0);
 	public static final Color WHITE = new Color(255);
 
-	float red;
-	float green;
-	float blue;
+	public float red;
+	public float green;
+	public float blue;
 
 	public Color(final float red, final float green, final float blue) {
 		this.red = red;
