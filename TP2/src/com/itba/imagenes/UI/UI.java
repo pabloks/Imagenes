@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
 import com.itba.imagenes.ColorEnum;
 import com.itba.imagenes.ImageMask;
 import com.itba.imagenes.ImageUtils;
+import com.itba.imagenes.fft.FFT;
 import com.itba.imagenes.susan.Susan;
 
 // do not import the package when you are already in it
@@ -65,6 +66,7 @@ public class UI extends JFrame {
 	private JButton btnActionjButtonHoughCircle = null;
 	private JButton btnActionjButtonNonMax = null;
 	private JButton btnActionjButtonHysteresis = null;
+	private JButton btnActionjButtonFFT = null;
 
 	private JPanel jContentPane1 = null;
 	private JTextField PathImage = null;
@@ -128,6 +130,7 @@ public class UI extends JFrame {
 			jContentPane.add(getBtnActionjButtonHoughCircle(), null);
 			jContentPane.add(getBtnActionjButtonNonMax(), null);
 			jContentPane.add(getBtnActionjButtonHysteresis(), null);
+			jContentPane.add(getBtnActionjButtonFFT(), null);
 
 			jContentPane
 					.add(getLabel("Filters", new Rectangle(20, 120, 50, 20)));
@@ -1297,6 +1300,63 @@ public class UI extends JFrame {
 			btnActionjButtonSusanCorners.setToolTipText("threshold");
 		}
 		return btnActionjButtonSusanCorners;
+	}
+
+	private JButton getBtnActionjButtonFFT() {
+		if (btnActionjButtonFFT == null) {
+			btnActionjButtonFFT = new JButton();
+			btnActionjButtonFFT.setBounds(new Rectangle(20, 370, 140, 16));
+			btnActionjButtonFFT.setText("FFT");
+			btnActionjButtonFFT
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+
+							if (getSelectedImage() == null) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+												"Error: no hay imagen de entrada",
+												JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+
+							String paramsResult = JOptionPane
+									.showInputDialog(
+											null,
+											"Introduzca parametros: isInverse (true,false), imageType (Magnitude, MagnitudeLog, PhaseAngle, Real, RealLog, Imaginary, ImaginaryLog)",
+											"Parametros",
+											JOptionPane.OK_CANCEL_OPTION);
+
+							if (paramsResult == null)
+								return;
+
+							try {
+								String[] params = paramsResult.split(",");
+
+								if (params.length != 2)
+									throw new Exception(
+											"Cantidad de parametros incorrecta");
+
+								_lastImage = FFT.applyFFT(getSelectedImage(),
+										Boolean.parseBoolean(params[0]),
+										Integer.parseInt(params[1]));
+								openImage(_lastImage, "FFT: isInverse= "
+										+ params[0] + " imageType= "
+										+ params[1]);
+							} catch (Exception ex) {
+								JOptionPane
+										.showMessageDialog(
+												null,
+												"Parametros incorrectos, respete el formato pedido!",
+												"Error: parametros incorrectos",
+												JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					});
+			btnActionjButtonFFT.setToolTipText("isInverse, imageType");
+		}
+		return btnActionjButtonFFT;
 	}
 
 	private JButton getBtnActionjButtonCanny() {
