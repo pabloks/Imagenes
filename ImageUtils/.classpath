@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/home/pabloks/Desktop/jai-1_1_2_01/lib/jai_codec.jar"/>
-	<classpathentry kind="lib" path="/home/pabloks/Desktop/jai-1_1_2_01/lib/jai_core.jar"/>
-	<classpathentry kind="lib" path="/home/pabloks/Desktop/jai-1_1_2_01/lib/mlibwrapper_jai.jar"/>
+	<classpathentry kind="lib" path="/Users/iandrono/Documents/ITBA/Imagenes/Imagenes/jars/ip.jar"/>
+	<classpathentry kind="lib" path="/Users/iandrono/Documents/ITBA/Imagenes/Imagenes/jars/PNG.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,7 +28,7 @@ import javax.swing.SwingUtilities;
 import com.itba.imagenes.ColorEnum;
 import com.itba.imagenes.ImageMask;
 import com.itba.imagenes.ImageUtils;
-import com.itba.imagenes.fft.FFT;
+import com.itba.imagenes.fft.MyFFT;
 import com.itba.imagenes.susan.Susan;
 
 // do not import the package when you are already in it
@@ -144,6 +143,9 @@ public class UI extends JFrame {
 
 			jContentPane.add(getLabel("Apply to",
 					new Rectangle(20, 50, 100, 20)));
+
+			jContentPane.add(getLabel("Fourier",
+					new Rectangle(20, 390, 100, 20)));
 
 			setRadios(jContentPane);
 
@@ -1036,18 +1038,21 @@ public class UI extends JFrame {
 				double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 },
 						{ 0, -1, 0 } };
 				ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
-				double[][] img = ImageUtils.filterImage2(getSelectedImage(), mask1);
+				double[][] img = ImageUtils.filterImage2(getSelectedImage(),
+						mask1);
 				double[] auxD = new double[3];
-				
-				BufferedImage aux = new BufferedImage(getSelectedImage().getWidth(), getSelectedImage().getHeight(), BufferedImage.TYPE_INT_RGB);
-				
-				for(int i = 0; i< aux.getHeight(); i++)
-					for(int j=0; j<aux.getWidth();j++){
+
+				BufferedImage aux = new BufferedImage(getSelectedImage()
+						.getWidth(), getSelectedImage().getHeight(),
+						BufferedImage.TYPE_INT_RGB);
+
+				for (int i = 0; i < aux.getHeight(); i++)
+					for (int j = 0; j < aux.getWidth(); j++) {
 						auxD[0] = auxD[1] = auxD[2] = img[j][i];
 						aux.getRaster().setPixel(j, i, auxD);
 					}
-				
-				_lastImage = aux; 
+
+				_lastImage = aux;
 
 				openImage(_lastImage, "Border detector Laplace");
 			}
@@ -1075,7 +1080,8 @@ public class UI extends JFrame {
 		button.setText("Laplace - Varianza");
 		button.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(), 3, 50);
+				_lastImage = ImageUtils.laplacevarianza(getSelectedImage(), 3,
+						50);
 
 				openImage(_lastImage, "Laplace - Varianza");
 			}
@@ -1305,7 +1311,7 @@ public class UI extends JFrame {
 	private JButton getBtnActionjButtonFFT() {
 		if (btnActionjButtonFFT == null) {
 			btnActionjButtonFFT = new JButton();
-			btnActionjButtonFFT.setBounds(new Rectangle(20, 370, 140, 16));
+			btnActionjButtonFFT.setBounds(new Rectangle(20, 410, 140, 16));
 			btnActionjButtonFFT.setText("FFT");
 			btnActionjButtonFFT
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -1321,29 +1327,12 @@ public class UI extends JFrame {
 								return;
 							}
 
-							String paramsResult = JOptionPane
-									.showInputDialog(
-											null,
-											"Introduzca parametros: isInverse (true,false), imageType (Magnitude, MagnitudeLog, PhaseAngle, Real, RealLog, Imaginary, ImaginaryLog)",
-											"Parametros",
-											JOptionPane.OK_CANCEL_OPTION);
-
-							if (paramsResult == null)
-								return;
-
 							try {
-								String[] params = paramsResult.split(",");
 
-								if (params.length != 2)
-									throw new Exception(
-											"Cantidad de parametros incorrecta");
-
-								_lastImage = FFT.applyFFT(getSelectedImage(),
-										Boolean.parseBoolean(params[0]),
-										Integer.parseInt(params[1]));
-								openImage(_lastImage, "FFT: isInverse= "
-										+ params[0] + " imageType= "
-										+ params[1]);
+								// _lastImage =
+								// MyFFT.applyFFT(getSelectedImage());
+								_lastImage = MyFFT.mixImages();
+								openImage(_lastImage, "FFT");
 							} catch (Exception ex) {
 								JOptionPane
 										.showMessageDialog(
@@ -1617,7 +1606,7 @@ public class UI extends JFrame {
 	 * @throws IOException
 	 */
 	private void initialize() throws IOException {
-		this.setSize(600, 430);
+		this.setSize(600, 600);
 		this.setResizable(false);
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
