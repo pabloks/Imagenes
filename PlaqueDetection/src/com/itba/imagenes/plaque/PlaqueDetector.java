@@ -52,7 +52,7 @@ public class PlaqueDetector {
 		Matrix foundPattern = hopfield.evaluate(imageToPattern("F_MOD"));
 
 		File outputImageFile = new File(
-				"/Users/iandrono/Documents/ITBA/Imagenes/workspace/patentes/hopfield.jpg");
+				"/home/pabloks/workspace/Imagenes/PlaqueDetection/patentes/hopfield.jpg");
 
 		ImageIO.write(patternToImage(foundPattern), "jpg", outputImageFile);
 	}
@@ -60,7 +60,7 @@ public class PlaqueDetector {
 	public static Matrix imageToPattern(String character) throws IOException {
 
 		BufferedImage img = ImageIO.read(new File(
-				"/Users/iandrono/Documents/ITBA/Imagenes/workspace/patentes/"
+				"/home/pabloks/workspace/Imagenes/PlaqueDetection/patentes/"
 						+ character + ".png"));
 
 		int[] rgb = new int[3];

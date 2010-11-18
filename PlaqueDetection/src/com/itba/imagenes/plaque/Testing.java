@@ -19,8 +19,10 @@ public class Testing {
 		hopfield.train(patterns);
 		hopfield.getWeights().print(N, 2);
 
-		double[][] testPattern = { { -1, 1, 1, 1, 1 } };
+		double[][] testPattern = { { -1, 1, - 1, 1, 1 } };
 		Matrix testPatternMatrix = new Matrix(testPattern);
 		hopfield.evaluate(testPatternMatrix).print(N, 2);
+		
+		System.out.println(hopfield.patternExists(new Matrix(testPattern)));
 	}
 }
