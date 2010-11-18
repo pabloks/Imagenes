@@ -16,7 +16,7 @@ public class Susan {
 				{ 0, 1, 1, 1, 1, 1, 0 }, { 0, 0, 1, 1, 1, 0, 0 }, };
 
 		final double[] gray = { 125, 125, 125 };
-		final double[] white = { 255, 255, 255 };
+		// final double[] white = { 255, 255, 255 };
 		final double[] red = { 255, 0, 0 };
 		double[] rgb = new double[3];
 

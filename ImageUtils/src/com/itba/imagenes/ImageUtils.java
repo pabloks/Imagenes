@@ -16,7 +16,6 @@ import java.awt.image.PixelGrabber;
 import java.util.Arrays;
 import java.util.Random;
 
-import javax.imageio.ImageTypeSpecifier;
 import javax.swing.ImageIcon;
 
 import com.itba.imagenes.canny.CannyEdgeDetector;
@@ -136,7 +135,7 @@ public class ImageUtils {
 		double[] rgb = new double[3];
 		double aux = 0;
 
-//		System.out.println(x + " " + y);
+		// System.out.println(x + " " + y);
 		for (int i = x - m; i < x + m; i++) {
 			for (int j = y - m; j < y + m; j++) {
 				rgb[0] = rgb[1] = rgb[2] = image[i][j];
@@ -163,121 +162,146 @@ public class ImageUtils {
 		return aux / Math.pow(2 * m + 1, 2);
 	}
 
-	public static BufferedImage laplacevarianza(BufferedImage image, int m, int limit) {
-        BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(),BufferedImage.TYPE_INT_BGR);
-        double[] dArray = new double[3];
-        double[] white = {255,255,255};
-        int width = image.getWidth();
-        int height = image.getHeight();
-        
+	public static BufferedImage laplacevarianza(BufferedImage image, int m,
+			int limit) {
+		BufferedImage result = new BufferedImage(image.getWidth(),
+				image.getHeight(), BufferedImage.TYPE_INT_BGR);
+		double[] dArray = new double[3];
+		double[] white = { 255, 255, 255 };
+		int width = image.getWidth();
+		int height = image.getHeight();
+
 		double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 }, { 0, -1, 0 } };
 		ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 		int umbral_laplace = 250;
 
 		double[][] maskedImage = ImageUtils.filterImage2(image, mask1);
-        
-    	for (int j = 2 * m + 1; j < height - 2 * m; j++) {
-        	for (int i = 2 * m; i < width - 2 * m; i++) {
-        			dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];
-                    com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]); 
-                    dArray[0] = dArray[1] = dArray[2] = maskedImage[i+1][j];
-                    com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]);
-                    
-                    if (Math.signum(pixel.red) != Math.signum(nextPixel.red) && Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
-                    	if (varianza(maskedImage, i, j, m) > umbral_laplace) {
-    						result.getRaster().setPixel(i, j, white);
-    					}
-                    }
-                    if (Math.signum(pixel.green) != Math.signum(nextPixel.green) && Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
-                    	if (varianza(maskedImage, i, j, m) > umbral_laplace) {
-    						result.getRaster().setPixel(i, j, white);
-    					}
-                    }
-                    if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue) && Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
-                    	if (varianza(maskedImage, i, j, m) > umbral_laplace) {
-    						result.getRaster().setPixel(i, j, white);
-    					}
-                    }
-            }
-    }
-        
-    	for (int j = 2 * m + 1; j < height - 2 * m; j++) {
+
+		for (int j = 2 * m + 1; j < height - 2 * m; j++) {
 			for (int i = 2 * m; i < width - 2 * m; i++) {
-                	dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];;
-                    com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]); 
-                    dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j+1];
-                    com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]);
-                    if (Math.signum(pixel.red) != Math.signum(nextPixel.red) && Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
-                    	if (varianza(maskedImage, i, j, m) > umbral_laplace) {
-                    		result.getRaster().setPixel(i, j, white);
-    					}
-                    }
-                    if (Math.signum(pixel.green) != Math.signum(nextPixel.green) && Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
-                    	if (varianza(maskedImage, i, j, m) > umbral_laplace) {
-    						result.getRaster().setPixel(i, j, white);
-    					}
-                    }
-                    if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue) && Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
-                    	if (varianza(maskedImage, i, j, m) > umbral_laplace) {
-    						result.getRaster().setPixel(i, j, white);
-    					}
-                    }
-                }
-        }
-        
-        return result;
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];
+				com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i + 1][j];
+				com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+
+				if (Math.signum(pixel.red) != Math.signum(nextPixel.red)
+						&& Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
+					if (varianza(maskedImage, i, j, m) > umbral_laplace) {
+						result.getRaster().setPixel(i, j, white);
+					}
+				}
+				if (Math.signum(pixel.green) != Math.signum(nextPixel.green)
+						&& Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
+					if (varianza(maskedImage, i, j, m) > umbral_laplace) {
+						result.getRaster().setPixel(i, j, white);
+					}
+				}
+				if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue)
+						&& Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
+					if (varianza(maskedImage, i, j, m) > umbral_laplace) {
+						result.getRaster().setPixel(i, j, white);
+					}
+				}
+			}
+		}
+
+		for (int j = 2 * m + 1; j < height - 2 * m; j++) {
+			for (int i = 2 * m; i < width - 2 * m; i++) {
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];
+				;
+				com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j + 1];
+				com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+				if (Math.signum(pixel.red) != Math.signum(nextPixel.red)
+						&& Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
+					if (varianza(maskedImage, i, j, m) > umbral_laplace) {
+						result.getRaster().setPixel(i, j, white);
+					}
+				}
+				if (Math.signum(pixel.green) != Math.signum(nextPixel.green)
+						&& Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
+					if (varianza(maskedImage, i, j, m) > umbral_laplace) {
+						result.getRaster().setPixel(i, j, white);
+					}
+				}
+				if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue)
+						&& Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
+					if (varianza(maskedImage, i, j, m) > umbral_laplace) {
+						result.getRaster().setPixel(i, j, white);
+					}
+				}
+			}
+		}
+
+		return result;
 
 	}
 
 	public static BufferedImage crossbycero(BufferedImage image, float limit) {
-        BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(),BufferedImage.TYPE_INT_BGR);
-        double[] dArray = new double[3];
-        double[] white = {255,255,255};
-        
+		BufferedImage result = new BufferedImage(image.getWidth(),
+				image.getHeight(), BufferedImage.TYPE_INT_BGR);
+		double[] dArray = new double[3];
+		double[] white = { 255, 255, 255 };
+
 		double[][] values1 = { { 0, -1, 0 }, { -1, 4, -1 }, { 0, -1, 0 } };
 		ImageMask mask1 = new ImageMask(values1, 3, 3, 1);
 
 		double[][] maskedImage = ImageUtils.filterImage2(image, mask1);
-        
-        for (int j = 0; j < image.getHeight(); ++j) {
-            for (int i = 0, width = image.getWidth() - 1; i < width; ++i) {
-            			dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];
-                        com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]); 
-                        dArray[0] = dArray[1] = dArray[2] = maskedImage[i+1][j];
-                        com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]);
-                        
-                        if (Math.signum(pixel.red) != Math.signum(nextPixel.red) && Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
-                            result.getRaster().setPixel(i, j, white);
-                        }
-                        if (Math.signum(pixel.green) != Math.signum(nextPixel.green) && Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
-                        	result.getRaster().setPixel(i, j, white);
-                        }
-                        if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue) && Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
-                        	result.getRaster().setPixel(i, j, white);
-                        }
-                }
-        }
-        
-        for (int j = 0, height = image.getHeight() - 1; j < height; ++j) {
-                for (int i = 0; i < image.getWidth(); ++i) {
-                	dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];;
-                    com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]); 
-                    dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j+1];
-                    com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color((float)dArray[0], (float)dArray[1], (float)dArray[2]);
-                        
-                        if (Math.signum(pixel.red) != Math.signum(nextPixel.red) && Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
-                        	result.getRaster().setPixel(i, j, white);
-                        }
-                        if (Math.signum(pixel.green) != Math.signum(nextPixel.green) && Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
-                        	result.getRaster().setPixel(i, j, white);
-                        }
-                        if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue) && Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
-                        	result.getRaster().setPixel(i, j, white);
-                        }
-                }
-        }
-        
-        return result;
+
+		for (int j = 0; j < image.getHeight(); ++j) {
+			for (int i = 0, width = image.getWidth() - 1; i < width; ++i) {
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];
+				com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i + 1][j];
+				com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+
+				if (Math.signum(pixel.red) != Math.signum(nextPixel.red)
+						&& Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
+					result.getRaster().setPixel(i, j, white);
+				}
+				if (Math.signum(pixel.green) != Math.signum(nextPixel.green)
+						&& Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
+					result.getRaster().setPixel(i, j, white);
+				}
+				if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue)
+						&& Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
+					result.getRaster().setPixel(i, j, white);
+				}
+			}
+		}
+
+		for (int j = 0, height = image.getHeight() - 1; j < height; ++j) {
+			for (int i = 0; i < image.getWidth(); ++i) {
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j];
+				;
+				com.itba.imagenes.susan.Color pixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+				dArray[0] = dArray[1] = dArray[2] = maskedImage[i][j + 1];
+				com.itba.imagenes.susan.Color nextPixel = new com.itba.imagenes.susan.Color(
+						(float) dArray[0], (float) dArray[1], (float) dArray[2]);
+
+				if (Math.signum(pixel.red) != Math.signum(nextPixel.red)
+						&& Math.abs(pixel.red) + Math.abs(nextPixel.red) >= limit) {
+					result.getRaster().setPixel(i, j, white);
+				}
+				if (Math.signum(pixel.green) != Math.signum(nextPixel.green)
+						&& Math.abs(pixel.green) + Math.abs(nextPixel.green) >= limit) {
+					result.getRaster().setPixel(i, j, white);
+				}
+				if (Math.signum(pixel.blue) != Math.signum(nextPixel.blue)
+						&& Math.abs(pixel.blue) + Math.abs(nextPixel.blue) >= limit) {
+					result.getRaster().setPixel(i, j, white);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	public static BufferedImage blackAndWhite(BufferedImage image,
@@ -518,7 +542,7 @@ public class ImageUtils {
 
 		return newImage;
 	}
-	
+
 	public static double[][] filterImage2(BufferedImage image, ImageMask mask) {
 		int width = image.getWidth();
 		int height = image.getHeight();
@@ -533,7 +557,7 @@ public class ImageUtils {
 			for (int j = borderDistanceW; j < width - borderDistanceW; j++) {
 				// for each pixel
 				aux = applyMask2(image, mask, j, i);
-				newImageDouble[j][i] = (aux[0] + aux[1] + aux[2])/3;
+				newImageDouble[j][i] = (aux[0] + aux[1] + aux[2]) / 3;
 			}
 		}
 
@@ -573,12 +597,12 @@ public class ImageUtils {
 
 		return newPixel;
 	}
-	
+
 	private static double[] applyMask2(BufferedImage image, ImageMask mask,
 			int x, int y) {
 
 		double[] newPixel = applyMaskW(image, mask, x, y);
-		
+
 		return newPixel;
 	}
 
