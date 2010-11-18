@@ -1317,23 +1317,46 @@ public class UI extends JFrame {
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
 
-							if (getSelectedImage() == null) {
-								JOptionPane
-										.showMessageDialog(
-												null,
-												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
-												"Error: no hay imagen de entrada",
-												JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-
+//							if (getSelectedImage() == null) {
+//								JOptionPane
+//										.showMessageDialog(
+//												null,
+//												"Tiene que seleccionar una imagen y tenerla abierta para aplicar un metodo",
+//												"Error: no hay imagen de entrada",
+//												JOptionPane.ERROR_MESSAGE);
+//								return;
+//							}
+								
 							try {
-
+								BufferedImage input2 = ImageIO.read(new File("/home/pabloks/workspace/Imagenes/TP2/output2.gif"));
 								// _lastImage =
-								// MyFFT.applyFFT(getSelectedImage());
-								_lastImage = MyFFT.mixImages();
-								openImage(_lastImage, "FFT");
+								_lastImage = MyFFT.applyFFT(getSelectedImage());
+//								_lastImage = MyFFT.getSpectrum(getSelectedImage());
+								_lastImage = MyFFT.reloadImage(input2);
+//								_lastImage = MyFFT.test(getSelectedImage());
+								
+//								ImageIO.write(MyFFT.getSpectrum(getSelectedImage()), "gif", new File("/home/pabloks/workspace/Imagenes/TP2/output.gif"));
+								
+								openImage(_lastImage, "FFT Phase 1");
+//								_lastImage = MyFFT.mixImages();
+//								openImage(MyFFT.getPhase(getSelectedImage()), "FFT Phase");
+//								openImage(MyFFT.getMagnitud(getSelectedImage()), "FFT Magnitud");
+//								openImage(MyFFT.getSpectrum(getSelectedImage()), "FFT Spectrum");
+								
+
+//								BufferedImage input1 = ImageIO
+//										.read(new File("/home/pabloks/workspace/Imagenes/TP2/cln1.gif"));
+//								BufferedImage input2 = ImageIO
+//										.read(new File("/home/pabloks/workspace/Imagenes/TP2/ftw.jpg"));
+//								
+//								MyFFT.mixImages(input1, input2);
+//								
+//								openImage(MyFFT.getAux1(), "img1");
+//								openImage(MyFFT.getAux2(), "img1");
+								
+								
 							} catch (Exception ex) {
+								ex.printStackTrace();
 								JOptionPane
 										.showMessageDialog(
 												null,

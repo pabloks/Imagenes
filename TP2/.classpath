@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ImageUtils"/>
-	<classpathentry kind="lib" path="/Users/iandrono/Documents/ITBA/Imagenes/Imagenes/jars/ip.jar"/>
-	<classpathentry kind="lib" path="/Users/iandrono/Documents/ITBA/Imagenes/Imagenes/jars/PNG.jar"/>
+	<classpathentry kind="lib" path="/home/pabloks/workspace/Imagenes/jars/ip.jar"/>
+	<classpathentry kind="lib" path="/home/pabloks/workspace/Imagenes/jars/PNG.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
